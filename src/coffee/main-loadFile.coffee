@@ -103,8 +103,8 @@ require([
         reader = new FileReader()
 
         reader.onload = (e) ->
-            $("#v").html()
-            $("#f").html()
+            $("#v").html("")
+            $("#f").html("")
             _objData = {
                 "v": []
                 "f": []
@@ -121,8 +121,8 @@ require([
             contentType: "application/x-www-form-urlencoded;charset=utf-8"
         }).done((data) ->
             if (data && data.length)
-                $("#v").html()
-                $("#f").html()
+                $("#v").html("")
+                $("#f").html("")
                 _objData = {
                     "v": []
                     "f": []
