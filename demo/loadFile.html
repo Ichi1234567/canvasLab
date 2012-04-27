@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <title>strftime</title>
+  </head>
+  <body>
+    <section style="float: left; padding-right: 2em;">
+        <div>
+            <input type="file" id="mymodel"/>
+            <div>shape file：<br>
+                <input type="radio" name="shape" val="../picLib/circle.obj"/>circle
+                <input type="radio" name="shape" val="../picLib/square.obj"/>square
+            </div>
+            <div>mode：<br>
+                <input type="radio" checked name="mode" val="GERERAL"/>GERERAL
+                <input type="radio" name="mode" val="SKELETON"/>SKELETON
+                <input type="radio" name="mode" val="ONLYFACE"/>ONLYFACE
+            </div>
+        </div>
+        <h3>OBJ DATA - <span id="name"></span></h3>
+        <p>v_num：<span id="vnum"></span></p>
+        <p>f_num：<span id="fnum"></span></p>
+        <p>_cp：( <span id="cpx"></span> , <span id="cpy"></span> )</p>
+        <p>r：<span id="r"></span></p>
+        v：<p id="v"></p>
+        f：<p id="f"></p>
+    </section>
+    <section>
+        <h3><span id="ctx-title"></span> in Canvas</h3>
+        <canvas id="render" width=800 height=600 style="border: 2px solid"></canvas>
+    </section>
+    <script type="text/javascript" src="http://busterjs.org/releases/latest/buster-test.js"></script>
+    <script type="text/javascript" src="http://busterjs.org/examples/strftime/strftime.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <script type="text/javascript" src="http://documentcloud.github.com/underscore/underscore-min.js"></script>
+    <script type="text/javascript" src="http://documentcloud.github.com/backbone/backbone-min.js"></script>
+    <script type="text/javascript" src="../src/javascript/vender/mustache.js"></script>
+
+    <script>
+    var require = {
+        "baseUrl":'../src/javascript',
+        "canvas":'../src/javascript/canvas'
+    }
+    </script>
+    <script data-main="main-loadFile" src="http://requirejs.org/docs/release/1.0.7/minified/require.js"></script>
+  </body>
+</html>
+
