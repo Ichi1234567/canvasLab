@@ -1,6 +1,7 @@
 require([
     "canvas/canvas_paint",
-], (CANVAS) ->
+    "canvas/view"
+], (CANVAS, VIEW) ->
     console.log("main-load")
     _objData = {
         "v": []
@@ -66,12 +67,32 @@ require([
             "canvas": canvas
             "ctx": ctx
         })
+        CANVAS.initLine({
+            "strokeStyle": "rgba(0, 0, 0, 0.3)"
+        })
+        ctx.beginPath()
+        ctx.moveTo(canvas.width / 2, 0)
+        ctx.lineTo(canvas.width / 2, canvas.height)
+        ctx.moveTo(0, canvas.height/2)
+        ctx.lineTo(canvas.width, canvas.height/2)
+        ctx.stroke()
+        ctx.save()
+        console.log(_objData)
+        VIEW.viewAt({
+            "canvas": canvas
+            "ctx": ctx
+            "pos": _objData["_cp"]
+        })
+        CANVAS.initLine({
+            "strokeStyle": "rgba(0, 0, 0, 0.5)"
+        })
         CANVAS.draw({
             "canvas": canvas
             "ctx": ctx
             "data": _objData
             "mode": mode
         })
+        ctx.restore()
 
     $("#mymodel").bind("change", (e) ->
         objFile = @.files[0]

@@ -1,6 +1,6 @@
 (function() {
 
-  require(["canvas/canvas_paint"], function(CANVAS) {
+  require(["canvas/canvas_paint", "canvas/view"], function(CANVAS, VIEW) {
     var canvas, ctx, _objData, _parse, _render, _save;
     console.log("main-load");
     _objData = {
@@ -76,12 +76,32 @@
         "canvas": canvas,
         "ctx": ctx
       });
-      return CANVAS.draw({
+      CANVAS.initLine({
+        "strokeStyle": "rgba(0, 0, 0, 0.3)"
+      });
+      ctx.beginPath();
+      ctx.moveTo(canvas.width / 2, 0);
+      ctx.lineTo(canvas.width / 2, canvas.height);
+      ctx.moveTo(0, canvas.height / 2);
+      ctx.lineTo(canvas.width, canvas.height / 2);
+      ctx.stroke();
+      ctx.save();
+      console.log(_objData);
+      VIEW.viewAt({
+        "canvas": canvas,
+        "ctx": ctx,
+        "pos": _objData["_cp"]
+      });
+      CANVAS.initLine({
+        "strokeStyle": "rgba(0, 0, 0, 0.5)"
+      });
+      CANVAS.draw({
         "canvas": canvas,
         "ctx": ctx,
         "data": _objData,
         "mode": mode
       });
+      return ctx.restore();
     };
     $("#mymodel").bind("change", function(e) {
       var objFile, reader;
