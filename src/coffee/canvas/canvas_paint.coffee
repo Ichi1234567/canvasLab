@@ -19,13 +19,20 @@ define([
                 (data.f && POLYDRAW.hasFace({
                     "data": data
                     "ctx": ctx
+                    "cb": (() ->
+                        (!!style_edge && CANVAS_UTIL.initLine(style_edge))
+                        ctx.stroke()
+                    )
                 }))
                 (!data.f && POLYDRAW.noFace({
                     "data": data
                     "ctx": ctx
+                    "cb": (() ->
+                        (!!style_edge && CANVAS_UTIL.initLine(style_edge))
+                        ctx.stroke()
+                    )
                 }))
-            (!!style_edge && CANVAS_UTIL.initLine(style_edge))
-            ctx.stroke()
+            #ctx.stroke()
         "polyFill": (params) ->
             canvas = params.canvas
             ctx = params.ctx
@@ -34,9 +41,14 @@ define([
             POLYDRAW.hasFace({
                 "data": data
                 "ctx": ctx
+                "type": "fill"
+                "cb": (() ->
+                    (!!style_fill && CANVAS_UTIL.initFill(style_fill))
+                    ctx.fill()
+                )
             })
-            (!!style_fill && CANVAS_UTIL.initFill(style_fill))
-            ctx.fill()
+            #(!!style_fill && CANVAS_UTIL.initFill(style_fill))
+            #ctx.fill()
         "cirEdge": (params) ->
             canvas = params.canvas
             ctx = params.ctx
