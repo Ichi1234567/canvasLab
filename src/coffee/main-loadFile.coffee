@@ -6,6 +6,8 @@ require([
     _objData = {
         "v": []
         "f": []
+        "min": [0, 0]
+        "max": [0, 0]
     }
     _parse = (fileTxt) ->
         console.log("parse")
@@ -40,6 +42,14 @@ require([
                         for _datai_j, j in _datai
                             _datai[j] = parseFloat(_datai_j)
                         _objData["v"].push(_datai)
+                        _objData["min"] = [
+                            Math.min(_objData["min"][0], _datai[0]),
+                            Math.min(_objData["min"][1], _datai[1])
+                        ]
+                        _objData["max"] = [
+                            Math.max(_objData["max"][0], _datai[0]),
+                            Math.max(_objData["max"][1], _datai[1])
+                        ]
                         _html = $("#v").html()
                         $("#v").html(_html + "<br>" + _datai.join(" , "))
                     when ((/f/g).test(line))
@@ -51,6 +61,8 @@ require([
                  _objData["vnum"] = _objData["v"].length))
                 (typeof _objData["fnum"] != "number" && (
                  _objData["fnum"] = _objData["f"].length))
+                _objData["w"] = _objData["max"][0] - _objData["min"][0]
+                _objData["h"] = _objData["max"][1] - _objData["min"][1]
         )
 
     _save = () ->
@@ -68,6 +80,7 @@ require([
             "ctx": ctx
         })
         CANVAS.initLine({
+            "lineWidth": 1
             "strokeStyle": "rgba(0, 0, 0, 0.3)"
         })
         ctx.beginPath()
@@ -81,11 +94,19 @@ require([
         VIEW.viewAt({
             "canvas": canvas
             "ctx": ctx
-            "pos": _objData["_cp"]
+            "data": _objData
+        })
+        VIEW.scale({
+            "canvas": canvas
+            "ctx": ctx
+            "scale": "auto"
+            "data": _objData
         })
         CANVAS.initLine({
             "strokeStyle": "rgba(0, 0, 0, 0.5)"
         })
+        ctx.beginPath()
+        ctx.closePath()
         CANVAS.draw({
             "canvas": canvas
             "ctx": ctx
@@ -108,6 +129,8 @@ require([
             _objData = {
                 "v": []
                 "f": []
+                "min": [0, 0]
+                "max": [0, 0]
             }
             _parse(e.target.result)
             _render()
@@ -126,6 +149,8 @@ require([
                 _objData = {
                     "v": []
                     "f": []
+                    "min": [0, 0]
+                    "max": [0, 0]
                 }
                 _parse(data)
                 _render()

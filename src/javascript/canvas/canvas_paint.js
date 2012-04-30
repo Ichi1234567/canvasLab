@@ -18,15 +18,21 @@
           */
           data.f && POLYDRAW.hasFace({
             "data": data,
-            "ctx": ctx
+            "ctx": ctx,
+            "cb": (function() {
+              !!style_edge && CANVAS_UTIL.initLine(style_edge);
+              return ctx.stroke();
+            })
           });
-          !data.f && POLYDRAW.noFace({
+          return !data.f && POLYDRAW.noFace({
             "data": data,
-            "ctx": ctx
+            "ctx": ctx,
+            "cb": (function() {
+              !!style_edge && CANVAS_UTIL.initLine(style_edge);
+              return ctx.stroke();
+            })
           });
         }
-        !!style_edge && CANVAS_UTIL.initLine(style_edge);
-        return ctx.stroke();
       },
       "polyFill": function(params) {
         var canvas, ctx, data, style_fill;
@@ -34,12 +40,15 @@
         ctx = params.ctx;
         data = params.data;
         style_fill = params.style_fill;
-        POLYDRAW.hasFace({
+        return POLYDRAW.hasFace({
           "data": data,
-          "ctx": ctx
+          "ctx": ctx,
+          "type": "fill",
+          "cb": (function() {
+            !!style_fill && CANVAS_UTIL.initFill(style_fill);
+            return ctx.fill();
+          })
         });
-        !!style_fill && CANVAS_UTIL.initFill(style_fill);
-        return ctx.fill();
       },
       "cirEdge": function(params) {
         var canvas, ctx, data, mode, r, style_edge, v;
