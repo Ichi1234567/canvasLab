@@ -112,8 +112,8 @@
       }
       reader = new FileReader();
       reader.onload = function(e) {
-        $("#v").html();
-        $("#f").html();
+        $("#v").html("");
+        $("#f").html("");
         _objData = {
           "v": [],
           "f": []
@@ -132,8 +132,8 @@
         contentType: "application/x-www-form-urlencoded;charset=utf-8"
       }).done(function(data) {
         if (data && data.length) {
-          $("#v").html();
-          $("#f").html();
+          $("#v").html("");
+          $("#f").html("");
           _objData = {
             "v": [],
             "f": []
