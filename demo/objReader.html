@@ -22,14 +22,16 @@
         <h3>OBJ DATA - <span id="name"></span></h3>
         <p>v_num：<span id="vnum"></span></p>
         <p>f_num：<span id="fnum"></span></p>
-        <p>_cp：( <span id="cpx"></span> , <span id="cpy"></span> )</p>
+        <p>_cp：( <span id="cp"></span> )</p>
+        <p>(w, h)：( <span id="size"></span> )</p>
         <p>r：<span id="r"></span></p>
         v：<p id="v"></p>
         f：<p id="f"></p>
     </section>
     <section>
         <h3><span id="ctx-title"></span> in Canvas</h3>
-        <canvas id="render" width=800 height=600 style="border: 2px solid"></canvas>
+        <!--canvas id="render" width=800 height=600 style="border: 2px solid"></canvas-->
+        <div id="render"></div>
     </section>
     <script type="text/javascript" src="http://busterjs.org/releases/latest/buster-test.js"></script>
     <script type="text/javascript" src="http://busterjs.org/examples/strftime/strftime.js"></script>
@@ -40,11 +42,10 @@
 
     <script>
     var require = {
-        "baseUrl":'../src/javascript',
-        "canvas":'../src/javascript/canvas'
+        "baseUrl":'../src/javascript'
     }
     </script>
-    <script data-main="main-loadFile" src="http://requirejs.org/docs/release/1.0.7/minified/require.js"></script>
+    <script data-main="main-reader" src="http://requirejs.org/docs/release/1.0.7/minified/require.js"></script>
   </body>
 </html>
 
