@@ -33,8 +33,6 @@ define([
                             min = Math.floor(Math.min(canvas.width, canvas.height) / min)
                             scale = [min, min]
 
-                #console.log(scale[0] + " , " + scale[1])
-                #console.log(center[0] + " , " + center[1])
                 ctx.transform(scale[0], 0, 0, scale[1], -at[0] * scale[0], -at[1] * scale[1])
                 ctx.lineWidth = ctx.lineWidth / (scale[0] + scale[1]) / 2
                 
