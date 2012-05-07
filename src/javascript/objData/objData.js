@@ -89,19 +89,18 @@
           this.data["mtxScript"] = [];
           this.data["mode"] = "GENERAL";
         }
-        this.data["prevMtx"] = [];
         return this;
       },
-      "clearMtx": function(params) {
-        this.data["prevMtx"] = [];
-        return this.data["mtxScript"] = [];
+      "reset": function(params) {
+        this.data["mtxScript"] = [];
+        return this;
       },
-      "resetMtx": function(params) {
-        this.data["prevMtx"] = this.data["mtxScript"];
-        return this.data["mtxScript"] = [];
+      "pushMtx": function(key, mtx, params) {
+        this.data["mtxScript"].push([key, mtx, params]);
+        return this;
       },
-      "pushMtx": function(key, mtx) {
-        return this.data["mtxScript"].push([key, mtx]);
+      "mergeMtx": function() {
+        return this;
       }
     });
     return OBJDATA;

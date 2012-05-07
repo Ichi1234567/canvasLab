@@ -83,16 +83,15 @@ define([
                 @data = parse(params[0])
                 @data["mtxScript"] = []
                 @data["mode"] = "GENERAL"
-            @data["prevMtx"] = []
             @
-        "clearMtx": (params) ->
-            @data["prevMtx"] = []
+        "reset": (params) ->
             @data["mtxScript"] = []
-        "resetMtx": (params) ->
-            @data["prevMtx"] = @data["mtxScript"]
-            @data["mtxScript"] = []
-        "pushMtx": (key, mtx) ->
-            @data["mtxScript"].push([key, mtx])
+            @
+        "pushMtx": (key, mtx, params) ->
+            @data["mtxScript"].push([key, mtx, params])
+            @
+        "mergeMtx": () ->
+            @
     )
 
     OBJDATA

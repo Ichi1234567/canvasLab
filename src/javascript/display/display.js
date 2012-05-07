@@ -166,9 +166,11 @@
         this.h = params.height;
         this.canvas = [
           $("<canvas></canvas>").css({
-            display: "block"
+            "display": "block",
+            "border": "1px solid black"
           }), $("<canvas></canvas>").css({
-            display: "none"
+            "display": "none",
+            "border": "1px solid black"
           })
         ];
         this.canvas[0].get(0).width = this.w;
@@ -176,7 +178,15 @@
         this.canvas[1].get(0).width = this.w;
         this.canvas[1].get(0).height = this.h;
         this.ctx = [this.canvas[0].get(0).getContext("2d"), this.canvas[1].get(0).getContext("2d")];
+        this.ctx[0].lineCap = "round";
+        this.ctx[1].lineCap = "round";
+        this.ctx[0].lineJoin = "round";
+        this.ctx[1].lineJoin = "round";
         params.display.append(this.canvas[0]).append(this.canvas[1]);
+        this.lookat = [this.w / 2, this.h / 2];
+        return this;
+      },
+      "reset": function(params) {
         this.lookat = [this.w / 2, this.h / 2];
         return this;
       },
@@ -216,12 +226,14 @@
         return this;
       },
       "lookAt": function(at) {
+        at = at && at.length === 2 ? at : this.lookat;
         if (at && at.length === 2) {
           this.lookat = at;
-          return GEOM.lookAt(at, {
+          GEOM.lookAt(at, {
             display: this
           });
         }
+        return this;
       },
       "updateCanvas": function(params) {
         var at, canvas, cb, ctx, current, data, data_i, fn, i, mode, mode_i, otherCtx, prev, _len;
