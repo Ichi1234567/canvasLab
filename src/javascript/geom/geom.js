@@ -40,18 +40,6 @@
           return ctx[1].transform(1, 0, 0, 1, vec[0], vec[1]);
         }
       },
-      moveTo: function(position, params) {
-        var center, ctx, display, dx, dy;
-        display = params.display;
-        ctx = display.ctx;
-        center = params.center;
-        if (position && position.length === 2) {
-          dx = position[0] - center[0];
-          dy = position[1] - center[1];
-          ctx[0].transform(1, 0, 0, 1, dx, dy);
-          return ctx[1].transform(1, 0, 0, 1, dx, dy);
-        }
-      },
       transform: function(tfMtx, params) {
         var center, ctx, display, dx, dy;
         display = params.display;
@@ -79,10 +67,17 @@
       },
       unwrapMtx: function(mtxInfos, params) {
         return mtxInfos.forEach(function(val) {
-          var key, mtx;
+          var argi, i, key, mtx, mtxArgs;
           key = val[0];
           mtx = val[1];
-          return GEOM[key](mtx, params);
+          mtxArgs = val[2];
+          if (mtxArgs) {
+            for (argi in mtxArgs) {
+              i = mtxArgs[argi];
+              params[i] = argi;
+            }
+          }
+          return typeof GEOM[key] === "function" && GEOM[key](mtx, params);
         });
       }
     };

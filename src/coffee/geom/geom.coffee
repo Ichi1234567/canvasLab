@@ -38,16 +38,17 @@ define([
                 ctx[1].transform(1, 0, 0, 1, vec[0], vec[1])
 
         #position = [2]
-        moveTo: (position, params) ->
-            display = params.display
-            ctx = display.ctx
-            center = params.center #obj center
+        #relation position
+        #moveTo: (position, params) ->
+        #    display = params.display
+        #    ctx = display.ctx
+        #    center = params.center #obj center, center有問題
 
-            if (position && position.length == 2)
-                dx = position[0] - center[0]
-                dy = position[1] - center[1]
-                ctx[0].transform(1, 0, 0, 1, dx, dy)
-                ctx[1].transform(1, 0, 0, 1, dx, dy)
+        #    if (position && position.length == 2)
+        #        dx = position[0] - center[0]
+        #        dy = position[1] - center[1]
+        #        ctx[0].transform(1, 0, 0, 1, dx, dy)
+        #        ctx[1].transform(1, 0, 0, 1, dx, dy)
 
         #tfMtx = [6]
         transform: (tfMtx, params) ->
@@ -84,10 +85,14 @@ define([
             mtxInfos.forEach((val) ->
                 key = val[0]
                 mtx = val[1]
+                mtxArgs = val[2]
+                if (mtxArgs)
+                    for argi, i of mtxArgs
+                        params[i] = argi
                 #console.log(val)
                 #console.log(GEOM)
                 #console.log(GEOM[key])
-                GEOM[key](mtx, params)
+                (typeof GEOM[key] == "function" && GEOM[key](mtx, params))
             )
 
     GEOM

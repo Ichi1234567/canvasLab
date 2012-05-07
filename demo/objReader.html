@@ -3,6 +3,11 @@
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
     <title>strftime</title>
+    <style>
+        .coor-val {
+            text-align: center;
+        }
+    </style>
   </head>
   <body>
     <section style="float: left; padding-right: 2em;">
@@ -12,6 +17,7 @@
                 <input type="radio" name="shape" val="../pics/circle.obj"/>circle
                 <input type="radio" name="shape" val="../pics/square.obj"/>square
                 <input type="radio" name="shape" val="../pics/triangle.obj"/>triangle
+                <input type="radio" name="shape" val="../pics/basicBuilding.obj"/>building
             </div>
             <div>mode：<br>
                 <input type="radio" checked name="mode" val="GERERAL"/>GERERAL
@@ -19,19 +25,41 @@
                 <input type="radio" name="mode" val="ONLYFACE"/>ONLYFACE
             </div>
         </div>
-        <h3>OBJ DATA - <span id="name"></span></h3>
-        <p>v_num：<span id="vnum"></span></p>
-        <p>f_num：<span id="fnum"></span></p>
-        <p>_cp：( <span id="cp"></span> )</p>
-        <p>(w, h)：( <span id="size"></span> )</p>
-        <p>r：<span id="r"></span></p>
-        v：<p id="v"></p>
-        f：<p id="f"></p>
+        <hr>
+        <div>
+            <h3>OBJ DATA - <span id="name"></span></h3>
+            <p>v_num：<span id="vnum"></span></p>
+            <p>f_num：<span id="fnum"></span></p>
+            <p>_cp：( <span id="cp"></span> )</p>
+            <p>(w, h)：( <span id="size"></span> )</p>
+            <p>r：<span id="r"></span></p>
+            v：<p id="v"></p>
+            f：<p id="f"></p>
+        </div>
     </section>
     <section>
-        <h3><span id="ctx-title"></span> in Canvas</h3>
-        <!--canvas id="render" width=800 height=600 style="border: 2px solid"></canvas-->
-        <div id="render"></div>
+        <div style="float: right; ">
+            <h3>simple motion</h3>
+            all-reset：<button id="all-reset">all-reset</button><br>
+            <hr>
+            look at：<button id="loadModelCenter">loading model center</button> or<br>
+            [ <input type="text" size=5 class="coor-val lookat"/> , <input type="text" size=5 class="coor-val lookat"/> ]
+            <button id="setLookAt">set</button><br>
+            <hr>
+            move：[ <input type="text" size=5 class="local coor-val mv" /> , 
+                        <input type="text" size=5 class="local coor-val mv" /> ]<br>
+            scale：[ <input type="text" size=5 class="local coor-val scale" /> , 
+                        <input type="text" size=5 class="local coor-val scale" /> ]<br>
+            rotate：<input type="text" class="local angle" />π<br>
+            <div style="float:right;">
+                <button id="clearMtx">clear above matrix</button>
+                <button id="pushMtx">push above matrix</button>
+            </div>
+        </div>
+        <div>
+            <h3><span id="ctx-title"></span> in Canvas</h3>
+            <div id="render"></div>
+        </div>
     </section>
     <script type="text/javascript" src="http://busterjs.org/releases/latest/buster-test.js"></script>
     <script type="text/javascript" src="http://busterjs.org/examples/strftime/strftime.js"></script>
