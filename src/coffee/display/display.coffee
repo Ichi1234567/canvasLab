@@ -148,10 +148,12 @@ define([
             @h = params.height
             @canvas = [
                 $("<canvas></canvas>").css({
-                    display: "block"
+                    "display": "block"
+                    "border": "1px solid black"
                 }),
                 $("<canvas></canvas>").css({
-                    display: "none"
+                    "display": "none"
+                    "border": "1px solid black"
                 })
             ]
             @canvas[0].get(0).width = @w
@@ -162,8 +164,16 @@ define([
                 @canvas[0].get(0).getContext("2d"),
                 @canvas[1].get(0).getContext("2d")
             ]
+            @ctx[0].lineCap = "round"
+            @ctx[1].lineCap = "round"
+            @ctx[0].lineJoin = "round"
+            @ctx[1].lineJoin = "round"
             params.display.append(@canvas[0])
                             .append(@canvas[1])
+            @lookat = [(@w / 2), (@h / 2)]
+            @
+
+        "reset": (params) ->
             @lookat = [(@w / 2), (@h / 2)]
             @
 
@@ -199,11 +209,13 @@ define([
                 ctx[i] = val
             @
         "lookAt": (at) ->
+            at = if (at && at.length == 2) then (at) else (@.lookat)
             if (at && at.length == 2)
                 @lookat = at
                 GEOM.lookAt(at, {
                     display: @
                 })
+            @
 
         "updateCanvas": (params) ->
             params = if (params) then (params) else ({})
