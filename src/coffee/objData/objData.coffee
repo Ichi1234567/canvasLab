@@ -1,5 +1,7 @@
 define([
-], () ->
+    #"../evts/evts",
+    "../display/cache"
+], (CACHE) ->
     console.log("---objData---")
 
     parse = (txt) ->
@@ -83,6 +85,8 @@ define([
                 @data = parse(params[0])
                 @data["mtxScript"] = []
                 @data["mode"] = "GENERAL"
+                @parent = if (params.parent) then (params.parent) else (null)
+                @children = if (params.children) then (params.children) else ([])
             @
         "reset": (params) ->
             @data["mtxScript"] = []
@@ -90,9 +94,41 @@ define([
         "pushMtx": (key, mtx, params) ->
             @data["mtxScript"].push([key, mtx, params])
             @
-        "mergeMtx": () ->
+        "cache": (params) ->
+            params = if (params) then (params) else ({})
+            min = @data.min
+            size = @data.size
+            params.x = min[0]
+            params.y = min[1]
+            params.w = size[0]
+            params.h = size[1]
+            params.mtx = @data["mtxScript"]
+            @cache = new CACHE(params)
             @
+        "updateCache": (params) ->
+            console.log("updateCache")
+            params = if (params) then (params) else ({})
+            params.mtx = @data["mtxScript"]
+            params.objs = [@]
+            @cache.updateCanvas(params)
+            @
+
+        "_hitTest": () ->
+            result = false
+            result
+        "mouseover": (params) ->
+            params = if (params) then (params) else ({})
+            pt = params.pt
+            if (pt)
+                console.log(pt)
+            @
+        "isIn": (params) ->
+            result = false
+            pt = params.pt
+            result
+        "pt2local": () ->
     )
+    
 
     OBJDATA
 )

@@ -1,6 +1,6 @@
 (function() {
 
-  define([], function() {
+  define(["../display/cache"], function(CACHE) {
     var OBJDATA, parse;
     console.log("---objData---");
     parse = function(txt) {
@@ -88,6 +88,8 @@
           this.data = parse(params[0]);
           this.data["mtxScript"] = [];
           this.data["mode"] = "GENERAL";
+          this.parent = params.parent ? params.parent : null;
+          this.children = params.children ? params.children : [];
         }
         return this;
       },
@@ -99,7 +101,37 @@
         this.data["mtxScript"].push([key, mtx, params]);
         return this;
       },
-      "mergeMtx": function() {
+      "cache": function(params) {
+        var min, size;
+        params = params ? params : {};
+        min = this.data.min;
+        size = this.data.size;
+        params.x = min[0];
+        params.y = min[1];
+        params.w = size[0];
+        params.h = size[1];
+        params.mtx = this.data["mtxScript"];
+        this.cache = new CACHE(params);
+        return this;
+      },
+      "updateCache": function(params) {
+        console.log("updateCache");
+        params = params ? params : {};
+        params.mtx = this.data["mtxScript"];
+        params.objs = [this];
+        this.cache.updateCanvas(params);
+        return this;
+      },
+      "_hitTest": function() {
+        var result;
+        result = false;
+        return result;
+      },
+      "mouseover": function(params) {
+        var pt;
+        params = params ? params : {};
+        pt = params.pt;
+        if (pt) console.log(pt);
         return this;
       }
     });

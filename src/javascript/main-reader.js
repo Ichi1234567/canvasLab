@@ -8,7 +8,8 @@
     initMtx = function(params) {
       params = params ? params : {};
       if (display && objData) {
-        $(".coor-val").val("-");
+        $(".mv").val("0");
+        $(".scale").val("1");
         $(".angle").val("0");
         objData.reset();
         return setLookMtx(params.at);
@@ -20,7 +21,7 @@
       if (display && objData) {
         data = objData.data;
         display.reset().lookAt(at).updateCanvas({
-          data: [data],
+          objs: [objData],
           mode: $("input[name=mode]:checked").attr("val"),
           cb: function() {}
         });
@@ -74,7 +75,7 @@
               return $(this).val(scale);
             });
             return display.updateCanvas({
-              data: [objData.data],
+              objs: [objData],
               mode: $("input[name=mode]:checked").attr("val"),
               cb: function() {}
             });
@@ -86,7 +87,7 @@
       });
       display.lookAt(data.cp);
       return display.updateCanvas({
-        data: [data],
+        objs: [objData],
         mode: $("input[name=mode]:checked").attr("val"),
         cb: function() {}
       });
@@ -101,7 +102,7 @@
       var data;
       if (display && objData) {
         display.updateCanvas({
-          data: [objData.data],
+          objs: [objData],
           mode: $("input[name=mode]:checked").attr("val"),
           cb: function() {}
         });
@@ -151,7 +152,7 @@
         rotate = /^-?\d+.?\d*$/g.test(rotval) ? parseFloat(rotval) : false;
         rotval && objData.pushMtx("rotate", rotate);
         return display.updateCanvas({
-          data: [objData.data],
+          objs: [objData],
           mode: $("input[name=mode]:checked").attr("val"),
           cb: function() {}
         });

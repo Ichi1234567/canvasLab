@@ -11,7 +11,9 @@ require([
     initMtx = (params) ->
         params = if (params) then (params) else ({})
         if (display && objData)
-            $(".coor-val").val("-")
+            $(".mv").val("0")
+            $(".scale").val("1")
+            #$(".coor-val").val("-")
             $(".angle").val("0")
             objData.reset()
             setLookMtx(params.at)
@@ -20,7 +22,7 @@ require([
         if (display && objData)
             data = objData.data
             display.reset().lookAt(at).updateCanvas(
-                data: [data]
+                objs: [objData]
                 mode: $("input[name=mode]:checked").attr("val")
                 cb: () ->
             )
@@ -76,7 +78,7 @@ require([
                         $(@).val(scale)
                     )
                     display.updateCanvas(
-                        data: [objData.data]
+                        objs: [objData]
                         mode: $("input[name=mode]:checked").attr("val")
                         cb: () ->
                     )
@@ -86,7 +88,7 @@ require([
         })
         display.lookAt(data.cp)
         display.updateCanvas(
-            data: [data]
+            objs: [objData]
             mode: $("input[name=mode]:checked").attr("val")
             cb: () ->
         )
@@ -103,7 +105,7 @@ require([
     $("input[name=mode]").bind("change", () ->
         if (display && objData)
             display.updateCanvas(
-                data: [objData.data]
+                objs: [objData]
                 mode: $("input[name=mode]:checked").attr("val")
                 cb: () ->
                     #objData.resetMtx()
@@ -163,7 +165,7 @@ require([
             (rotval && objData.pushMtx("rotate", rotate))
 
             display.updateCanvas(
-                data: [objData.data]
+                objs: [objData]
                 mode: $("input[name=mode]:checked").attr("val")
                 cb: () ->
             )
