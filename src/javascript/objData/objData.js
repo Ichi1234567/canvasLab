@@ -133,7 +133,14 @@
         pt = params.pt;
         if (pt) console.log(pt);
         return this;
-      }
+      },
+      "isIn": function(params) {
+        var pt, result;
+        result = false;
+        pt = params.pt;
+        return result;
+      },
+      "pt2local": function() {}
     });
     return OBJDATA;
   });

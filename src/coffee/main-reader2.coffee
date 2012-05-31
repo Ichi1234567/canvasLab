@@ -4,6 +4,7 @@ require([
     'text!../tmpl/objInf.hbs',
     "vender/jq-plugin/jquery.mousewheel"
 ], (OBJDATA, DISPLAY, INFTMPL) ->
+    console.log(123123123123)
     console.log("---main-read2---")
     INFVIEW = Backbone.View.extend(
         "initialize": () ->
@@ -190,7 +191,6 @@ require([
 
                 val = if (data.g) then (data.g) else ("--")
                 $("#ctx-title").html(val)
-
                 #show obj start
                 showData = {}
                 if (data.g) then (showData.name = data.g)

@@ -125,7 +125,8 @@
               console.log("down");
               pt = [e.offsetX, e.offsetY];
               return display._handleEvts({
-                pt: pt
+                pt: pt,
+                e: e
               });
             },
             "mouseup": function(e) {
@@ -159,10 +160,11 @@
         h = this.h;
         w = this.w;
         color = ctx.getImageData(pt[0], pt[1], 1, 1).data;
+        if (color[3]) this.getObjectsUnderPoint(params);
         return this;
       };
 
-      DISPLAY.prototype["getObjectsUnderPoint"] = function() {
+      DISPLAY.prototype["getObjectsUnderPoint"] = function(params) {
         var result;
         result = null;
         return result;
