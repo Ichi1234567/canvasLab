@@ -36,6 +36,7 @@ define([
             params.display.append(@canvas[0])
                             .append(@canvas[1])
             @lookat = [(@w / 2), (@h / 2)]
+            @status = ""
             @enableEvts()
             @
 
@@ -110,32 +111,60 @@ define([
             canvas.map(($canvas_i) ->
                 $canvas_i.bind({
                     "mousedown": (e) ->
-                        console.log("down")
-                        pt = [e.offsetX, e.offsetY]
+                        #console.log("down")
+                        pt = [
+                            e.offsetX,
+                            e.offsetY
+                        ]
                         display._handleEvts({
                             pt: pt
                             e: e
                         })
+                    "mouseup": (e) ->
+                        #console.log("up")
+                        pt = [
+                            e.offsetX,
+                            e.offsetY
+                        ]
+                        display._handleEvts({
+                            pt: pt
+                            e: e
+                        })
+                    "click": (e) ->
+                        #console.log("click")
+                        pt = [
+                            e.offsetX,
+                            e.offsetY
+                        ]
+                        display._handleEvts({
+                            pt: pt
+                            e: e
+                        })
+                    "dblclick": (e) ->
+                        #console.log("dblclick")
+                        pt = [
+                            e.offsetX,
+                            e.offsetY
+                        ]
+                        display._handleEvts({
+                            pt: pt
+                            e: e
+                        })
+                    #"mouseover": (e) ->
+                    #    console.log("over")
+                    #    #console.log(e)
+                    #    #pt = [e.offsetX, e.offsetY]
+                    #"mouseout": (e) ->
+                    #    console.log("out")
                     #"mousemove": (e) ->
                     #    console.log("move")
-                    "mouseup": (e) ->
-                        console.log("up")
-                    "mouseover": (e) ->
-                        console.log("over")
-                        #console.log(e)
-                        #pt = [e.offsetX, e.offsetY]
-                    "mouseout": (e) ->
-                        console.log("out")
-                    "click": (e) ->
-                        console.log("click")
-                    "dblclick": (e) ->
-                        console.log("dblclick")
                 })
             )
             @
         "disableEvts": () ->
             @
         "_handleEvts": (params) ->
+            console.log("_handleEvts")
             #target = getObjectsUnderPoint
             #if tartget != null
             #target.onXXX(evt)
@@ -146,10 +175,26 @@ define([
             color = ctx.getImageData(pt[0], pt[1], 1, 1).data
             #has alpha
             if (color[3])
-                @getObjectsUnderPoint(params)
+                # at + delta = center ---> delta = center - at
+                # ? + delta = pt
+                # ? = pt - delta = pt - (center - at)
+                lookat = @lookat #center
+                #console.log(lookat.join())
+                newpt = [
+                    (pt[0] - (w / 2) + lookat[0]),
+                    (pt[1] - (h / 2) + lookat[1])
+                ]
+                params.pt = newpt
+                result = @getObjectsUnderPoint(params)
+                if (result)
+                    console.log(params.e.type)
             @
         "getObjectsUnderPoint": (params) ->
             result = null
+            children = @objs
+            for children_i, i in children
+                result = children_i.isIn(params)
+                (result && (i = children.length))
             result
 
     DISPLAY

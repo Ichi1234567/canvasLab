@@ -1,7 +1,8 @@
 define([
     #"../evts/evts",
     "../display/cache"
-], (CACHE) ->
+    "../geom/mtx"
+], (CACHE, MTX) ->
     console.log("---objData---")
 
     parse = (txt) ->
@@ -116,17 +117,64 @@ define([
         "_hitTest": () ->
             result = false
             result
-        "mouseover": (params) ->
-            params = if (params) then (params) else ({})
-            pt = params.pt
-            if (pt)
-                console.log(pt)
-            @
         "isIn": (params) ->
+            console.log("isIn~?")
             result = false
             pt = params.pt
-            result
-        "pt2local": () ->
+            #console.log(pt.join())
+            localPt = @pt2local(params)
+            #localPt2 = [
+            #    (localPt[0] + cache.x),
+            #    (localPt[1] + cache.y)
+            #]
+            #console.log("--- local ---")
+            #console.log(localPt0.join())
+            console.log("local-pt：" + localPt.join())
+            #console.log(localPt2.join())
+            cache = @cache
+            #console.log(cache)
+            localPt = [
+                (localPt[0] - cache.x),
+                (localPt[1] - cache.y)
+            ]
+            cacheCtx = cache.ctx[0]
+            color = cacheCtx.getImageData(localPt[0], localPt[1], 1, 1).data
+            console.log(color)
+            #result
+            (!!color[3])
+
+        "pt2local": (params) ->
+            result = false
+            pt = params.pt
+            #console.log(pt.join())
+            mtx = @data["mtxScript"][0][1]
+            mtxArr = MTX.loadIdentity()
+            mtxArr[0][0] = mtx[0]
+            mtxArr[1][0] = mtx[1]
+            mtxArr[0][1] = mtx[2]
+            mtxArr[1][1] = mtx[3]
+            mtxArr[0][2] = mtx[4]
+            mtxArr[1][2] = mtx[5]
+            invMtx = MTX.invert(mtxArr)
+            #console.log("--- invMtx ---")
+            #console.log(invMtx)
+            pta = [[pt[0]], [pt[1]], [1]]
+            #console.log("pta")
+            #console.log(pta)
+            localPtMtx = MTX.multiMtx(invMtx, pta)
+            #console.log(mtx)
+            #console.log(mtxArr)
+            #console.log(MTX)
+            #console.log(localPtMtx)
+            cache = @cache
+            #console.log(cache)
+            cacheCtx = cache.ctx[0]
+            localPt = [
+                localPtMtx[0][0],
+                localPtMtx[1][0]
+            ]
+
+            localPt
     )
     
 

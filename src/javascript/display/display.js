@@ -39,6 +39,7 @@
         this.ctx[1].lineJoin = "round";
         params.display.append(this.canvas[0]).append(this.canvas[1]);
         this.lookat = [this.w / 2, this.h / 2];
+        this.status = "";
         this.enableEvts();
         return this;
       };
@@ -122,7 +123,6 @@
           return $canvas_i.bind({
             "mousedown": function(e) {
               var pt;
-              console.log("down");
               pt = [e.offsetX, e.offsetY];
               return display._handleEvts({
                 pt: pt,
@@ -130,19 +130,28 @@
               });
             },
             "mouseup": function(e) {
-              return console.log("up");
-            },
-            "mouseover": function(e) {
-              return console.log("over");
-            },
-            "mouseout": function(e) {
-              return console.log("out");
+              var pt;
+              pt = [e.offsetX, e.offsetY];
+              return display._handleEvts({
+                pt: pt,
+                e: e
+              });
             },
             "click": function(e) {
-              return console.log("click");
+              var pt;
+              pt = [e.offsetX, e.offsetY];
+              return display._handleEvts({
+                pt: pt,
+                e: e
+              });
             },
             "dblclick": function(e) {
-              return console.log("dblclick");
+              var pt;
+              pt = [e.offsetX, e.offsetY];
+              return display._handleEvts({
+                pt: pt,
+                e: e
+              });
             }
           });
         });
@@ -154,19 +163,32 @@
       };
 
       DISPLAY.prototype["_handleEvts"] = function(params) {
-        var color, ctx, h, pt, w;
+        var color, ctx, h, lookat, newpt, pt, result, w;
+        console.log("_handleEvts");
         pt = params.pt;
         ctx = this.ctx[this.current];
         h = this.h;
         w = this.w;
         color = ctx.getImageData(pt[0], pt[1], 1, 1).data;
-        if (color[3]) this.getObjectsUnderPoint(params);
+        if (color[3]) {
+          lookat = this.lookat;
+          newpt = [pt[0] - (w / 2) + lookat[0], pt[1] - (h / 2) + lookat[1]];
+          params.pt = newpt;
+          result = this.getObjectsUnderPoint(params);
+          if (result) console.log(params.e.type);
+        }
         return this;
       };
 
       DISPLAY.prototype["getObjectsUnderPoint"] = function(params) {
-        var result;
+        var children, children_i, i, result, _len;
         result = null;
+        children = this.objs;
+        for (i = 0, _len = children.length; i < _len; i++) {
+          children_i = children[i];
+          result = children_i.isIn(params);
+          result && (i = children.length);
+        }
         return result;
       };
 

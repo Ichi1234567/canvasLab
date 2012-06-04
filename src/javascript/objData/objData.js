@@ -1,6 +1,6 @@
 (function() {
 
-  define(["../display/cache"], function(CACHE) {
+  define(["../display/cache", "../geom/mtx"], function(CACHE, MTX) {
     var OBJDATA, parse;
     console.log("---objData---");
     parse = function(txt) {
@@ -127,20 +127,40 @@
         result = false;
         return result;
       },
-      "mouseover": function(params) {
-        var pt;
-        params = params ? params : {};
-        pt = params.pt;
-        if (pt) console.log(pt);
-        return this;
-      },
       "isIn": function(params) {
-        var pt, result;
+        var cache, cacheCtx, color, localPt, pt, result;
+        console.log("isIn~?");
         result = false;
         pt = params.pt;
-        return result;
+        localPt = this.pt2local(params);
+        console.log("local-pt：" + localPt.join());
+        cache = this.cache;
+        localPt = [localPt[0] - cache.x, localPt[1] - cache.y];
+        cacheCtx = cache.ctx[0];
+        color = cacheCtx.getImageData(localPt[0], localPt[1], 1, 1).data;
+        console.log(color);
+        return !!color[3];
       },
-      "pt2local": function() {}
+      "pt2local": function(params) {
+        var cache, cacheCtx, invMtx, localPt, localPtMtx, mtx, mtxArr, pt, pta, result;
+        result = false;
+        pt = params.pt;
+        mtx = this.data["mtxScript"][0][1];
+        mtxArr = MTX.loadIdentity();
+        mtxArr[0][0] = mtx[0];
+        mtxArr[1][0] = mtx[1];
+        mtxArr[0][1] = mtx[2];
+        mtxArr[1][1] = mtx[3];
+        mtxArr[0][2] = mtx[4];
+        mtxArr[1][2] = mtx[5];
+        invMtx = MTX.invert(mtxArr);
+        pta = [[pt[0]], [pt[1]], [1]];
+        localPtMtx = MTX.multiMtx(invMtx, pta);
+        cache = this.cache;
+        cacheCtx = cache.ctx[0];
+        localPt = [localPtMtx[0][0], localPtMtx[1][0]];
+        return localPt;
+      }
     });
     return OBJDATA;
   });

@@ -4,7 +4,6 @@ require([
     'text!../tmpl/objInf.hbs',
     "vender/jq-plugin/jquery.mousewheel"
 ], (OBJDATA, DISPLAY, INFTMPL) ->
-    console.log(123123123123)
     console.log("---main-read2---")
     INFVIEW = Backbone.View.extend(
         "initialize": () ->
@@ -231,6 +230,7 @@ require([
                         "obj": model
                     })
                     view.display = display
+                    #display.enableEvts()
                     model.cache()
                 @initMtx({
                     at: data.cp
