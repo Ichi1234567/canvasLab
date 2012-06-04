@@ -225,13 +225,22 @@ require([
                         display: $("#render")
                         width: 750
                         height: 600
-                    }).pushObj({
-                        "clear": true
-                        "obj": model
                     })
                     view.display = display
                     #display.enableEvts()
-                    model.cache()
+
+                display.pushObj({
+                    "clear": true
+                    "obj": model
+                })
+                model.cache()
+                #model.bindEvt("click", () ->
+                #    alert("click1發生")
+                #)
+                #model.bindEvt("click", () ->
+                #    alert("click2發生")
+                #)
+
                 @initMtx({
                     at: data.cp
                     display: display

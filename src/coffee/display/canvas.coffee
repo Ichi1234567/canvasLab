@@ -34,10 +34,6 @@ define([
                 }
                 GEOM.lookAt(at, params)
             @
-            #at = params.at
-            #delete params.at
-
-            #GEOM.lookAt(at, params)
 
         "updateCanvas": (params) ->
             mode = params.mode

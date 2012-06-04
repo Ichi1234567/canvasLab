@@ -23,11 +23,11 @@ define([
             ctx.lineJoin = "round"
             
             @lookat = [(@x + @w / 2), (@y + @h / 2)]
-            $("#cache").append(canvas)
+            #$("#cache").append(canvas)
             @
 
         "clear": (params) ->
-            console.log("clear")
+            #console.log("cache clear")
             params = if (params) then (params) else ({})
             params.ctx = @ctx[0]
             ctx = params.ctx
@@ -52,7 +52,7 @@ define([
             @
 
         "updateCanvas": (params) ->
-            console.log("cache update")
+            #console.log("cache update")
             @clear()
             params = if (params) then (params) else ({})
             @mtx = if (params.mtx) then (params.mtx) else (@mtx)

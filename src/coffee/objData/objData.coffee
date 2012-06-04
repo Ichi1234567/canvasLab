@@ -88,6 +88,12 @@ define([
                 @data["mode"] = "GENERAL"
                 @parent = if (params.parent) then (params.parent) else (null)
                 @children = if (params.children) then (params.children) else ([])
+                @evts = {
+                    "mousedown": []
+                    "mouseup": []
+                    "click": []
+                    "dblclick": []
+                }
             @
         "reset": (params) ->
             @data["mtxScript"] = []
@@ -107,18 +113,30 @@ define([
             @cache = new CACHE(params)
             @
         "updateCache": (params) ->
-            console.log("updateCache")
+            #console.log("updateCache")
             params = if (params) then (params) else ({})
             params.mtx = @data["mtxScript"]
             params.objs = [@]
             @cache.updateCanvas(params)
             @
 
+        "bindEvt": (evtype, fn) ->
+            if (typeof @evts[evtype] != "undefined")
+                @evts[evtype].push(fn)
+            @
+        "cancelEvt": (evtype, fn) ->
+            if (typeof @evts[evtype] != "undefined")
+                for fn_i, i in @evts[evtype]
+                    if (fn_i == fn)
+                        delete @evts[evtype][i]
+                        i = @evts[evtype].length
+            @
+
         "_hitTest": () ->
             result = false
             result
         "isIn": (params) ->
-            console.log("isIn~?")
+            #console.log("isIn~?")
             result = false
             pt = params.pt
             #console.log(pt.join())
@@ -129,7 +147,7 @@ define([
             #]
             #console.log("--- local ---")
             #console.log(localPt0.join())
-            console.log("local-pt：" + localPt.join())
+            #console.log("local-pt：" + localPt.join())
             #console.log(localPt2.join())
             cache = @cache
             #console.log(cache)
@@ -139,12 +157,25 @@ define([
             ]
             cacheCtx = cache.ctx[0]
             color = cacheCtx.getImageData(localPt[0], localPt[1], 1, 1).data
-            console.log(color)
+            #console.log(color)
             #result
-            (!!color[3])
+            #(!!color[3])
+            result = false
+            if (!!color[3])
+                #console.log("-------------------------")
+                #console.log(params.e.type)
+                #console.log(@evts["click"])
+                #console.log(@evts[params.e.type])
+                fna = $.extend([], @evts[params.e.type])
+                result = {
+                    fna: fna
+                }
+            result
 
         "pt2local": (params) ->
-            result = false
+            params = if (params) then (params) else ({})
+
+            localPt = false
             pt = params.pt
             #console.log(pt.join())
             mtx = @data["mtxScript"][0][1]
@@ -175,6 +206,32 @@ define([
             ]
 
             localPt
+
+        "pt2globle": (params) ->
+            params = if (params) then (params) else ({})
+            cb = if (params.cb) then (params.cb) else (() ->)
+
+            globlePt = false
+
+            pt = params.pt
+            mtx = @data["mtxScript"][0][1]
+            mtxArr = MTX.loadIdentity()
+            mtxArr[0][0] = mtx[0]
+            mtxArr[1][0] = mtx[1]
+            mtxArr[0][1] = mtx[2]
+            mtxArr[1][1] = mtx[3]
+            mtxArr[0][2] = mtx[4]
+            mtxArr[1][2] = mtx[5]
+            pta = [[pt[0]], [pt[1]], [1]]
+            globlePtMtx = MTX.multiMtx(mtxArr, pta)
+            globlePt = [
+                globlePtMtx[0][0],
+                globlePtMtx[1][0]
+            ]
+
+            cb(globlePt)
+
+            globlePt
     )
     
 

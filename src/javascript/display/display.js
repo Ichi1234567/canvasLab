@@ -84,8 +84,8 @@
         var isclear, len, rmNo;
         params = params ? params : {};
         isclear = params.clear ? true : false;
-        len = this.objs.length;
-        rmNo = isclear ? len : 0.;
+        len = isclear ? 0. : this.objs.length;
+        rmNo = isclear ? this.objs.length : 0.;
         params.obj && this.objs.splice(len, rmNo, params.obj);
         return this;
       };
@@ -163,8 +163,7 @@
       };
 
       DISPLAY.prototype["_handleEvts"] = function(params) {
-        var color, ctx, h, lookat, newpt, pt, result, w;
-        console.log("_handleEvts");
+        var color, ctx, fna_i, h, i, lookat, newpt, pt, result, w, _len, _ref;
         pt = params.pt;
         ctx = this.ctx[this.current];
         h = this.h;
@@ -175,7 +174,15 @@
           newpt = [pt[0] - (w / 2) + lookat[0], pt[1] - (h / 2) + lookat[1]];
           params.pt = newpt;
           result = this.getObjectsUnderPoint(params);
-          if (result) console.log(params.e.type);
+          if (result) {
+            if (!!result.fna && result.fna.length) {
+              _ref = result.fna;
+              for (i = 0, _len = _ref.length; i < _len; i++) {
+                fna_i = _ref[i];
+                fna_i(params.e, result.target);
+              }
+            }
+          }
         }
         return this;
       };
@@ -187,8 +194,17 @@
         for (i = 0, _len = children.length; i < _len; i++) {
           children_i = children[i];
           result = children_i.isIn(params);
-          result && (i = children.length);
+          result && (result.target = children_i, i = children.length);
         }
+        return result;
+      };
+
+      DISPLAY.prototype["getPtFromObject"] = function(params) {
+        var obj, result, tmpPt;
+        result = null;
+        params = params ? params : {};
+        obj = params.obj ? params.obj : null;
+        tmpPt = params.pt ? params.pt : null;
         return result;
       };
 

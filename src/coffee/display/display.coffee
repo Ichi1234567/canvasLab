@@ -76,9 +76,10 @@ define([
         "pushObj": (params) ->
             params = if (params) then (params) else ({})
             isclear = if (params.clear) then (true) else (false)
-            len = @objs.length
-            rmNo = if (isclear) then (len) else (0)
+            len = if (isclear) then (0) else (@objs.length)
+            rmNo = if (isclear) then (@objs.length) else (0)
             (params.obj && @objs.splice(len, rmNo, params.obj))
+            #console.log(@objs)
             @
 
         "updateCanvas": (params) ->
@@ -164,7 +165,7 @@ define([
         "disableEvts": () ->
             @
         "_handleEvts": (params) ->
-            console.log("_handleEvts")
+            #console.log("_handleEvts")
             #target = getObjectsUnderPoint
             #if tartget != null
             #target.onXXX(evt)
@@ -187,14 +188,28 @@ define([
                 params.pt = newpt
                 result = @getObjectsUnderPoint(params)
                 if (result)
-                    console.log(params.e.type)
+                    #console.log(result)
+                    if (!!result.fna && result.fna.length)
+                        for fna_i, i in result.fna
+                            fna_i(params.e, result.target)
+                    #console.log(params.e.type)
             @
         "getObjectsUnderPoint": (params) ->
             result = null
             children = @objs
             for children_i, i in children
                 result = children_i.isIn(params)
-                (result && (i = children.length))
+                (result && (result.target = children_i
+                i = children.length))
+            result
+
+        "getPtFromObject": (params) ->
+            result = null
+            params = if (params) then (params) else ({})
+            obj = if (params.obj) then (params.obj) else (null)
+            tmpPt = if (params.pt) then (params.pt) else (null)
+            #if (obj && tmpPt)
+            #   console.log(123) 
             result
 
     DISPLAY

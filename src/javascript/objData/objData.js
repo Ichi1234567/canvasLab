@@ -90,6 +90,12 @@
           this.data["mode"] = "GENERAL";
           this.parent = params.parent ? params.parent : null;
           this.children = params.children ? params.children : [];
+          this.evts = {
+            "mousedown": [],
+            "mouseup": [],
+            "click": [],
+            "dblclick": []
+          };
         }
         return this;
       },
@@ -115,11 +121,28 @@
         return this;
       },
       "updateCache": function(params) {
-        console.log("updateCache");
         params = params ? params : {};
         params.mtx = this.data["mtxScript"];
         params.objs = [this];
         this.cache.updateCanvas(params);
+        return this;
+      },
+      "bindEvt": function(evtype, fn) {
+        if (typeof this.evts[evtype] !== "undefined") this.evts[evtype].push(fn);
+        return this;
+      },
+      "cancelEvt": function(evtype, fn) {
+        var fn_i, i, _len, _ref;
+        if (typeof this.evts[evtype] !== "undefined") {
+          _ref = this.evts[evtype];
+          for (i = 0, _len = _ref.length; i < _len; i++) {
+            fn_i = _ref[i];
+            if (fn_i === fn) {
+              delete this.evts[evtype][i];
+              i = this.evts[evtype].length;
+            }
+          }
+        }
         return this;
       },
       "_hitTest": function() {
@@ -128,22 +151,27 @@
         return result;
       },
       "isIn": function(params) {
-        var cache, cacheCtx, color, localPt, pt, result;
-        console.log("isIn~?");
+        var cache, cacheCtx, color, fna, localPt, pt, result;
         result = false;
         pt = params.pt;
         localPt = this.pt2local(params);
-        console.log("local-pt：" + localPt.join());
         cache = this.cache;
         localPt = [localPt[0] - cache.x, localPt[1] - cache.y];
         cacheCtx = cache.ctx[0];
         color = cacheCtx.getImageData(localPt[0], localPt[1], 1, 1).data;
-        console.log(color);
-        return !!color[3];
+        result = false;
+        if (!!color[3]) {
+          fna = $.extend([], this.evts[params.e.type]);
+          result = {
+            fna: fna
+          };
+        }
+        return result;
       },
       "pt2local": function(params) {
-        var cache, cacheCtx, invMtx, localPt, localPtMtx, mtx, mtxArr, pt, pta, result;
-        result = false;
+        var cache, cacheCtx, invMtx, localPt, localPtMtx, mtx, mtxArr, pt, pta;
+        params = params ? params : {};
+        localPt = false;
         pt = params.pt;
         mtx = this.data["mtxScript"][0][1];
         mtxArr = MTX.loadIdentity();
@@ -160,6 +188,26 @@
         cacheCtx = cache.ctx[0];
         localPt = [localPtMtx[0][0], localPtMtx[1][0]];
         return localPt;
+      },
+      "pt2globle": function(params) {
+        var cb, globlePt, globlePtMtx, mtx, mtxArr, pt, pta;
+        params = params ? params : {};
+        cb = params.cb ? params.cb : (function() {});
+        globlePt = false;
+        pt = params.pt;
+        mtx = this.data["mtxScript"][0][1];
+        mtxArr = MTX.loadIdentity();
+        mtxArr[0][0] = mtx[0];
+        mtxArr[1][0] = mtx[1];
+        mtxArr[0][1] = mtx[2];
+        mtxArr[1][1] = mtx[3];
+        mtxArr[0][2] = mtx[4];
+        mtxArr[1][2] = mtx[5];
+        pta = [[pt[0]], [pt[1]], [1]];
+        globlePtMtx = MTX.multiMtx(mtxArr, pta);
+        globlePt = [globlePtMtx[0][0], globlePtMtx[1][0]];
+        cb(globlePt);
+        return globlePt;
       }
     });
     return OBJDATA;
