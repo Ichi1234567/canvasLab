@@ -174,7 +174,7 @@
           newpt = [pt[0] - (w / 2) + lookat[0], pt[1] - (h / 2) + lookat[1]];
           params.pt = newpt;
           result = this.getObjectsUnderPoint(params);
-          if (result) {
+          if (result.inside) {
             if (!!result.fna && result.fna.length) {
               _ref = result.fna;
               for (i = 0, _len = _ref.length; i < _len; i++) {
@@ -183,6 +183,8 @@
               }
             }
           }
+        } else {
+          this.getObjectsUnderPoint(params);
         }
         return this;
       };

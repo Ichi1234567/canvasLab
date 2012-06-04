@@ -187,12 +187,14 @@ define([
                 ]
                 params.pt = newpt
                 result = @getObjectsUnderPoint(params)
-                if (result)
+                if (result.inside)
                     #console.log(result)
                     if (!!result.fna && result.fna.length)
                         for fna_i, i in result.fna
                             fna_i(params.e, result.target)
                     #console.log(params.e.type)
+            else
+                @getObjectsUnderPoint(params)
             @
         "getObjectsUnderPoint": (params) ->
             result = null

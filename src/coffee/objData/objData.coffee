@@ -94,6 +94,7 @@ define([
                     "click": []
                     "dblclick": []
                 }
+                @evStatus = null
             @
         "reset": (params) ->
             @data["mtxScript"] = []
@@ -160,7 +161,9 @@ define([
             #console.log(color)
             #result
             #(!!color[3])
-            result = false
+            result = {
+                inside: false
+            }
             if (!!color[3])
                 #console.log("-------------------------")
                 #console.log(params.e.type)
@@ -168,8 +171,18 @@ define([
                 #console.log(@evts[params.e.type])
                 fna = $.extend([], @evts[params.e.type])
                 result = {
+                    inside: true
                     fna: fna
                 }
+                @evStatus = if (params.e.type == "mousedown") then ("mousedown") else (@evStatus)
+            switch (params.e.type)
+                when ("click"), ("dblclick")
+                    #console.log(@evStatus)
+                    if (@evStatus != "mousedown")
+                        result.fna = []
+                    @evStatus = null
+                #when ("mouseup")
+                #    @evStatus = null
             result
 
         "pt2local": (params) ->

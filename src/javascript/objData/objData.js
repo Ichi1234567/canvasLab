@@ -96,6 +96,7 @@
             "click": [],
             "dblclick": []
           };
+          this.evStatus = null;
         }
         return this;
       },
@@ -159,12 +160,22 @@
         localPt = [localPt[0] - cache.x, localPt[1] - cache.y];
         cacheCtx = cache.ctx[0];
         color = cacheCtx.getImageData(localPt[0], localPt[1], 1, 1).data;
-        result = false;
+        result = {
+          inside: false
+        };
         if (!!color[3]) {
           fna = $.extend([], this.evts[params.e.type]);
           result = {
+            inside: true,
             fna: fna
           };
+          this.evStatus = params.e.type === "mousedown" ? "mousedown" : this.evStatus;
+        }
+        switch (params.e.type) {
+          case "click":
+          case "dblclick":
+            if (this.evStatus !== "mousedown") result.fna = [];
+            this.evStatus = null;
         }
         return result;
       },
