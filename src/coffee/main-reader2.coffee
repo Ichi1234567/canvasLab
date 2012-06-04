@@ -25,11 +25,13 @@ require([
         "events": {
             "change input[name=shape]": "readObj"
             "change input[name=mode]": "mode_change"
+            "change input[name=evts]": "evts_change"
             "click #all-reset": "allreset_click"
             "click #loadModelCenter": "center_obj"
             "click #setLookAt": "set_lookat"
             "click #clearMtx": "clearMtx"
             "click #pushMtx": "pushMtx"
+            "click #reset-ev-log": "resetlog"
             "mousewheel canvas": "wheelFn"
         }
         "readObj": (e) ->
@@ -71,6 +73,20 @@ require([
                 routines.initMtx({
                     at: data.cp
                 })
+        "evts_change": (e) ->
+            #console.log("evt change")
+            routines = @routines
+            $target = $(e.target)
+            display = @display
+            objs = @objs
+            #console.log($target)
+            if (display && objs.length)
+                chk = !!($target.attr("checked"))
+                evAct = if (chk) then ("bindEvt") else ("cancelEvt")
+                ev = $target.attr("val")
+                objs.forEach((obj_i) ->
+                    obj_i[evAct](ev, routines.evDef)
+                )
         "allreset_click": () ->
             #console.log("allreset_click")
             display = @display
@@ -128,6 +144,8 @@ require([
                     mode: $("input[name=mode]:checked").attr("val")
                     cb: () ->
                 )
+        "resetlog": (e) ->
+            $("#evlog").html("")
         "wheelFn": (e, delta) ->
             #console.log("wheelFn")
             if (@display && @objs.length)
@@ -143,6 +161,9 @@ require([
                 )
 
         "routines": {
+            evDef: (e) ->
+                $log = $("<div></div>").html(e.type)
+                $("#evlog").append($log)
             dataOut: (className) ->
                 data = []
                 isValid = true
