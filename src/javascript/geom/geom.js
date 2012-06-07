@@ -21,18 +21,16 @@
         }
       },
       scale: function(scale, params) {
-        var cb, center, ctx, display, dx, dy, mtx_val;
+        var cb, center, ctx, display, mtx_val;
         cb = params.cb ? params.cb : (function() {});
         display = params.display;
         ctx = display.ctx;
         center = params.center;
         if (scale && scale.length === 2) {
-          dx = center[0] - center[0] * scale[0];
-          dy = center[1] - center[1] * scale[1];
           ctx.map(function(ctx_i) {
-            return ctx_i.transform(scale[0], 0, 0, scale[1], dx, dy);
+            return ctx_i.transform(scale[0], 0, 0, scale[1], 0, 0);
           });
-          mtx_val = [scale[0], 0, 0, scale[1], dx, dy];
+          mtx_val = [scale[0], 0, 0, scale[1], 0, 0];
           return cb(mtx_val);
         }
       },
@@ -74,9 +72,9 @@
           center_new = [center[0] * Math.cos(angle) + center[1] * Math.sin(angle), -center[0] * Math.sin(angle) + center[1] * Math.cos(angle)];
           vec = [center[0] - center_new[0], center[1] - center_new[1]];
           ctx.map(function(ctx_i) {
-            return ctx_i.transform(Math.cos(angle), -Math.sin(angle), Math.sin(angle), Math.cos(angle), vec[0], vec[1]);
+            return ctx_i.transform(Math.cos(angle), -Math.sin(angle), Math.sin(angle), Math.cos(angle), 0, 0);
           });
-          mtx_val = [Math.cos(angle), -Math.sin(angle), Math.sin(angle), Math.cos(angle), vec[0], vec[1]];
+          mtx_val = [Math.cos(angle), -Math.sin(angle), Math.sin(angle), Math.cos(angle), 0, 0];
           return cb(mtx_val);
         }
       },
@@ -96,7 +94,7 @@
           }
           if (typeof GEOM[key] === "function") {
             newMtx = [];
-            cb = function(mtx_val) {
+            cb = function(mtx_val, otherInf) {
               newMtx[0] = mtx_val[0] * mixMtx[0] + mtx_val[2] * mixMtx[1];
               newMtx[1] = mtx_val[1] * mixMtx[0] + mtx_val[3] * mixMtx[1];
               newMtx[2] = mtx_val[0] * mixMtx[2] + mtx_val[2] * mixMtx[3];

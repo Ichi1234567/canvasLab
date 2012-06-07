@@ -40,6 +40,10 @@ require([
             fileUrl = $(target).attr("val")
             thisView = @
             routines = thisView.routines
+            $("input[name=evts]").each(() ->
+                $(this).attr("checked", false)
+            )
+            $("#evlog").html("")
             $.ajax({
                 type: "GET"
                 url: fileUrl

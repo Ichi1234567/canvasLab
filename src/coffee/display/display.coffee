@@ -84,6 +84,7 @@ define([
 
         "updateCanvas": (params) ->
             # switch to the clear canvas
+            #console.log("in display")
             prev = @current
             current = (@current + 1) % 2
             @switchCanvas({

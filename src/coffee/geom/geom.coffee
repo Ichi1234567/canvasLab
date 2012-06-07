@@ -34,14 +34,18 @@ define([
             center = params.center #obj center
 
             if (scale && scale.length == 2)
-                dx = center[0] - center[0] * scale[0]
-                dy = center[1] - center[1] * scale[1]
+                #dx = center[0] - center[0] * scale[0]
+                #dy = center[1] - center[1] * scale[1]
+                #console.log("--- in scale ---")
+                #console.log(dx + " , " + dy)
                 ctx.map((ctx_i) ->
-                    ctx_i.transform(scale[0], 0, 0, scale[1], dx, dy)
+                    #ctx_i.transform(scale[0], 0, 0, scale[1], dx, dy)
+                    ctx_i.transform(scale[0], 0, 0, scale[1], 0, 0)
                 )
                 #ctx[0].transform(scale[0], 0, 0, scale[1], dx, dy)
                 #ctx[1].transform(scale[0], 0, 0, scale[1], dx, dy)
-                mtx_val = [scale[0], 0, 0, scale[1], dx, dy]
+                #mtx_val = [scale[0], 0, 0, scale[1], dx, dy]
+                mtx_val = [scale[0], 0, 0, scale[1], 0, 0]
                 cb(mtx_val)
 
 
@@ -113,11 +117,11 @@ define([
                 #params.cb = (mtx) ->
                 #GEOM.move(vec, params)
                 ctx.map((ctx_i) ->
-                    ctx_i.transform(Math.cos(angle), -Math.sin(angle), Math.sin(angle), Math.cos(angle), vec[0], vec[1])
+                    #ctx_i.transform(Math.cos(angle), -Math.sin(angle), Math.sin(angle), Math.cos(angle), vec[0], vec[1])
+                    ctx_i.transform(Math.cos(angle), -Math.sin(angle), Math.sin(angle), Math.cos(angle), 0, 0)
                 )
-                #ctx[0].transform(Math.cos(angle), -Math.sin(angle), Math.sin(angle), Math.cos(angle), vec[0], vec[1])
-                #ctx[1].transform(Math.cos(angle), -Math.sin(angle), Math.sin(angle), Math.cos(angle), vec[0], vec[1])
-                mtx_val = [Math.cos(angle), -Math.sin(angle), Math.sin(angle), Math.cos(angle), vec[0], vec[1]]
+                #mtx_val = [Math.cos(angle), -Math.sin(angle), Math.sin(angle), Math.cos(angle), vec[0], vec[1]]
+                mtx_val = [Math.cos(angle), -Math.sin(angle), Math.sin(angle), Math.cos(angle), 0, 0]
                 cb(mtx_val)
 
 
@@ -135,7 +139,7 @@ define([
                 #console.log(GEOM[key])
                 if (typeof GEOM[key] == "function")
                     newMtx = []
-                    cb = (mtx_val) ->
+                    cb = (mtx_val, otherInf) ->
                         newMtx[0] = mtx_val[0] * mixMtx[0] + mtx_val[2] * mixMtx[1]
                         newMtx[1] = mtx_val[1] * mixMtx[0] + mtx_val[3] * mixMtx[1]
                         newMtx[2] = mtx_val[0] * mixMtx[2] + mtx_val[2] * mixMtx[3]

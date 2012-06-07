@@ -137,34 +137,56 @@ define([
             result = false
             result
         "isIn": (params) ->
+            console.log("------------------")
             #console.log("isIn~?")
             result = false
-            pt = params.pt
-            #console.log(pt.join())
-            localPt = @pt2local(params)
-            #localPt2 = [
-            #    (localPt[0] + cache.x),
-            #    (localPt[1] + cache.y)
-            #]
-            #console.log("--- local ---")
-            #console.log(localPt0.join())
-            #console.log("local-pt：" + localPt.join())
-            #console.log(localPt2.join())
             cache = @cache
-            #console.log(cache)
+            pt = params.pt
+            #console.log(localPt2.join())
+            params.pt = [
+                pt[0] - cache.new_min[0],
+                pt[1] - cache.new_min[0]
+            ]
+            #params.nodelta = true
+            localPt = @pt2local(params)
+            #console.log("ori-localPt：" + localPt.join())
+            localMIN = @pt2local({pt: cache.new_min})
+            localMAX = @pt2local({pt: cache.new_max})
+            #localPt = params.pt
             localPt = [
-                (localPt[0] - cache.x),
-                (localPt[1] - cache.y)
+                #localPt[0] - cache.x,
+                #localPt[1] - cache.y
+                #localPt[0] - localMIN[0],
+                #localPt[1] - localMIN[1]
+                #localPt[0] - cache.new_min[0],
+                #localPt[1] - cache.new_min[1]
+                pt[0] - cache.new_min[0],
+                pt[1] - cache.new_min[1]
             ]
             cacheCtx = cache.ctx[0]
             color = cacheCtx.getImageData(localPt[0], localPt[1], 1, 1).data
+
+            console.log("cache-min：" + cache.new_min.join())
+            console.log("local-min：" + localMIN.join())
+            console.log("cache-xy：" + cache.x + "," + cache.y)
+            console.log("cache-max：" + cache.new_max.join())
+            console.log("local-max：" + localMAX.join())
+            console.log("pt：" + pt.join())
+            console.log("localPt：" + localPt.join())
+            #console.log("color：")
             #console.log(color)
             #result
-            #(!!color[3])
             result = {
                 inside: false
             }
-            if (!!color[3])
+            hasColor = false
+            for color_i, i in color by 3
+                if (color_i)
+                    hasColor = true
+                    i = color.length
+                (i && (i++))
+            #console.log("hasColor：" + hasColor)
+            if (hasColor)
                 #console.log("-------------------------")
                 #console.log(params.e.type)
                 #console.log(@evts["click"])
@@ -183,6 +205,7 @@ define([
                     @evStatus = null
                 #when ("mouseup")
                 #    @evStatus = null
+            #console.log(result)
             result
 
         "pt2local": (params) ->
@@ -190,6 +213,9 @@ define([
 
             localPt = false
             pt = params.pt
+            #console.log("-------------------")
+            #console.log("pt2local")
+            #console.log("pt：")
             #console.log(pt.join())
             mtx = @data["mtxScript"][0][1]
             mtxArr = MTX.loadIdentity()
@@ -197,8 +223,10 @@ define([
             mtxArr[1][0] = mtx[1]
             mtxArr[0][1] = mtx[2]
             mtxArr[1][1] = mtx[3]
-            mtxArr[0][2] = mtx[4]
-            mtxArr[1][2] = mtx[5]
+            mtxArr[0][2] = if (params.nodelta) then (0) else (mtx[4])
+            mtxArr[1][2] = if (params.nodelta) then (0) else (mtx[5])
+            pta = [[pt[0]], [pt[1]], [1]]
+            #localPtMtx = MTX.multiMtx(mtxArr, pta)
             invMtx = MTX.invert(mtxArr)
             #console.log("--- invMtx ---")
             #console.log(invMtx)
@@ -217,6 +245,8 @@ define([
                 localPtMtx[0][0],
                 localPtMtx[1][0]
             ]
+            #console.log(localPt.join())
+            #console.log("--------------------------------")
 
             localPt
 

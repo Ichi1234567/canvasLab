@@ -152,18 +152,42 @@
         return result;
       },
       "isIn": function(params) {
-        var cache, cacheCtx, color, fna, localPt, pt, result;
+        var cache, cacheCtx, color, color_i, fna, hasColor, i, localMAX, localMIN, localPt, pt, result, _len, _step;
+        console.log("------------------");
         result = false;
-        pt = params.pt;
-        localPt = this.pt2local(params);
         cache = this.cache;
-        localPt = [localPt[0] - cache.x, localPt[1] - cache.y];
+        pt = params.pt;
+        params.pt = [pt[0] - cache.new_min[0], pt[1] - cache.new_min[0]];
+        localPt = this.pt2local(params);
+        localMIN = this.pt2local({
+          pt: cache.new_min
+        });
+        localMAX = this.pt2local({
+          pt: cache.new_max
+        });
+        localPt = [pt[0] - cache.new_min[0], pt[1] - cache.new_min[1]];
         cacheCtx = cache.ctx[0];
         color = cacheCtx.getImageData(localPt[0], localPt[1], 1, 1).data;
+        console.log("cache-min：" + cache.new_min.join());
+        console.log("local-min：" + localMIN.join());
+        console.log("cache-xy：" + cache.x + "," + cache.y);
+        console.log("cache-max：" + cache.new_max.join());
+        console.log("local-max：" + localMAX.join());
+        console.log("pt：" + pt.join());
+        console.log("localPt：" + localPt.join());
         result = {
           inside: false
         };
-        if (!!color[3]) {
+        hasColor = false;
+        for (i = 0, _len = color.length, _step = 3; i < _len; i += _step) {
+          color_i = color[i];
+          if (color_i) {
+            hasColor = true;
+            i = color.length;
+          }
+          i && (i++);
+        }
+        if (hasColor) {
           fna = $.extend([], this.evts[params.e.type]);
           result = {
             inside: true,
@@ -190,8 +214,9 @@
         mtxArr[1][0] = mtx[1];
         mtxArr[0][1] = mtx[2];
         mtxArr[1][1] = mtx[3];
-        mtxArr[0][2] = mtx[4];
-        mtxArr[1][2] = mtx[5];
+        mtxArr[0][2] = params.nodelta ? 0. : mtx[4];
+        mtxArr[1][2] = params.nodelta ? 0. : mtx[5];
+        pta = [[pt[0]], [pt[1]], [1]];
         invMtx = MTX.invert(mtxArr);
         pta = [[pt[0]], [pt[1]], [1]];
         localPtMtx = MTX.multiMtx(invMtx, pta);

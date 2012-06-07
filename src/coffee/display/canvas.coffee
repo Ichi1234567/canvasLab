@@ -47,6 +47,8 @@ define([
             for obj_i, i in objs
                 data_i = obj_i.data
                 mode_i = if (mode) then (mode) else (data_i.mode)
+                cp = data_i["cp"]
+                #console.log(data_i)
                 switch (mode_i)
                     when ("SKELETON")
                         fn = (data, params) ->
@@ -66,10 +68,26 @@ define([
                             (!data.r && PAINT.polyEdge(data, params))
                 mixMtxInf = GEOM.unwrapMtx(data_i.mtxScript, {
                     display: @
-                    center: data_i["cp"]
+                    center: cp
+                    #center: if (data_i.newcp) then (data_i.newcp) else (cp)
+                    #min: data_i["min"]
+                    #max: data_i["max"]
+                    #size: data_i["size"]
                 })
+                newcp = [
+                    (cp[0] * mixMtxInf[1][0] + cp[1] * mixMtxInf[1][2] + mixMtxInf[1][4]),
+                    (cp[0] * mixMtxInf[1][1] + cp[1] * mixMtxInf[1][3] + mixMtxInf[1][5])
+                ]
+                #console.log("cp：" + cp.join())
+                #console.log(mixMtxInf[1])
+                #console.log("newcp：" + newcp.join())
+                obj_i.data.newcp = newcp
+
+
+                obj_i.reset().pushMtx(mixMtxInf[0], mixMtxInf[1])
+
                 if (!params.cache)
-                    obj_i.reset().pushMtx(mixMtxInf[0], mixMtxInf[1]).updateCache()
+                    obj_i.updateCache()
                 fn(data_i, {
                     ctx: ctx
                     display: @
