@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <title>strftime</title>
+    <style>
+        .coor-val {
+            text-align: center;
+        }
+    </style>
+  </head>
+  <body>
+    <section>
+        <div style="float: left; padding-right: 15px;">
+            <h3>matrix controler</h3>
+            <div>
+                rows：<input class="mtx-inf" type="text" size=3 value=2 />
+                cols：<input class="mtx-inf" type="text" size=3 value=2 /><br>
+                op選擇：<select name="op">
+                    <option name="op" value="add"/>加
+                    <option name="op" value="sub"/>減
+                    <option name="op" value="multiMtx">乘矩陣
+                    <option name="op" value="multiNum">乘數字
+                    <option name="op" value="det">det
+                    <option name="op" value="transpose">轉置
+                    <option name="op" value="adjustMtx">伴隨矩陣
+                    <option name="op" value="invert">反矩陣
+                </select>
+                <button id="createMtxBtn">重新產生mtx</button>
+                <div>
+                    <h4>mtx1</h4>
+                    <div id="mtx1_in" class="mtx-in"></div>
+                </div>
+                <div id="mtx" class="mtx2">
+                    <h4>mtx2</h4>
+                    <div id="mtx2_in" class="mtx-in"></div>
+                </div>
+                <div id="num" class="mtx2">
+                    <h4>num</h4>
+                    <div id="num_in" class="mtx-in"></div>
+                </div>
+                <hr>
+                <button id="run">確定操作</button>
+            </div>
+        </div>
+        <div style="float: left; width: 800px; padding-left: 15px;">
+            <h3>MATRIX</h3>
+            <div id="render">
+                <!--div class="mtx_out" style="display: inline; border: solid 1px black"></div>
+                <span> + </span>
+                <div class="mtx_out" style="display: inline; border: solid 1px black"></div>
+                <span> = </span>
+                <div style="display: inline; border: solid 1px black"></div-->
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </section>
+    <!--script type="text/javascript" src="http://busterjs.org/releases/latest/buster-test.js"></script>
+    <script type="text/javascript" src="http://busterjs.org/examples/strftime/strftime.js"></script-->
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <script type="text/javascript" src="http://documentcloud.github.com/underscore/underscore-min.js"></script>
+    <script type="text/javascript" src="http://documentcloud.github.com/backbone/backbone-min.js"></script>
+    <script type="text/javascript" src="../src/javascript/vender/mustache.js"></script>
+
+    <script>
+    var require = {
+        "baseUrl":'../src/javascript'
+    }
+    </script>
+    <script data-main="main-mtx" src="http://requirejs.org/docs/release/1.0.7/minified/require.js"></script>
+  </body>
+</html>
+

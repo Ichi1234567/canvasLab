@@ -1,0 +1,4 @@
+define([
+], () ->
+    console.log("---evts---")
+)
