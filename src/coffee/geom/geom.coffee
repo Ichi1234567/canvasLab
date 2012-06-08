@@ -38,10 +38,10 @@ define([
                 #dy = center[1] - center[1] * scale[1]
                 #console.log("--- in scale ---")
                 #console.log(dx + " , " + dy)
-                ctx.map((ctx_i) ->
-                    #ctx_i.transform(scale[0], 0, 0, scale[1], dx, dy)
-                    ctx_i.transform(scale[0], 0, 0, scale[1], 0, 0)
-                )
+                #ctx.map((ctx_i) ->
+                #    #ctx_i.transform(scale[0], 0, 0, scale[1], dx, dy)
+                #    ctx_i.transform(scale[0], 0, 0, scale[1], 0, 0)
+                #)
                 #ctx[0].transform(scale[0], 0, 0, scale[1], dx, dy)
                 #ctx[1].transform(scale[0], 0, 0, scale[1], dx, dy)
                 #mtx_val = [scale[0], 0, 0, scale[1], dx, dy]
@@ -57,9 +57,9 @@ define([
             center = params.center #obj center
 
             if (vec && vec.length == 2)
-                ctx.map((ctx_i) ->
-                    ctx_i.transform(1, 0, 0, 1, vec[0], vec[1])
-                )
+                #ctx.map((ctx_i) ->
+                #    ctx_i.transform(1, 0, 0, 1, vec[0], vec[1])
+                #)
                 #ctx[0].transform(1, 0, 0, 1, vec[0], vec[1])
                 #ctx[1].transform(1, 0, 0, 1, vec[0], vec[1])
                 mtx_val = [1, 0, 0, 1, vec[0], vec[1]]
@@ -87,9 +87,9 @@ define([
             center = params.center
 
             if (tfMtx && tfMtx.length == 6)
-                ctx.map((ctx_i) ->
-                    ctx_i.transform(tfMtx[0], tfMtx[1], tfMtx[2], tfMtx[3], tfMtx[4], tfMtx[5])
-                )
+                #ctx.map((ctx_i) ->
+                #    ctx_i.transform(tfMtx[0], tfMtx[1], tfMtx[2], tfMtx[3], tfMtx[4], tfMtx[5])
+                #)
                 #ctx[0].transform(tfMtx[0], tfMtx[1], tfMtx[2], tfMtx[3], tfMtx[4], tfMtx[5])
                 #ctx[1].transform(tfMtx[0], tfMtx[1], tfMtx[2], tfMtx[3], tfMtx[4], tfMtx[5])
                 mtx_val = [tfMtx[0], tfMtx[1], tfMtx[2], tfMtx[3], tfMtx[4], tfMtx[5]]
@@ -116,10 +116,10 @@ define([
                 #ctx[1].rotate(angle)
                 #params.cb = (mtx) ->
                 #GEOM.move(vec, params)
-                ctx.map((ctx_i) ->
-                    #ctx_i.transform(Math.cos(angle), -Math.sin(angle), Math.sin(angle), Math.cos(angle), vec[0], vec[1])
-                    ctx_i.transform(Math.cos(angle), -Math.sin(angle), Math.sin(angle), Math.cos(angle), 0, 0)
-                )
+                #ctx.map((ctx_i) ->
+                #    #ctx_i.transform(Math.cos(angle), -Math.sin(angle), Math.sin(angle), Math.cos(angle), vec[0], vec[1])
+                #    ctx_i.transform(Math.cos(angle), -Math.sin(angle), Math.sin(angle), Math.cos(angle), 0, 0)
+                #)
                 #mtx_val = [Math.cos(angle), -Math.sin(angle), Math.sin(angle), Math.cos(angle), vec[0], vec[1]]
                 mtx_val = [Math.cos(angle), -Math.sin(angle), Math.sin(angle), Math.cos(angle), 0, 0]
                 cb(mtx_val)
@@ -149,6 +149,11 @@ define([
                         mixMtx = newMtx
                     params.cb = cb
                     GEOM[key](mtx, params)
+            )
+            display = params.display
+            ctx = display.ctx
+            ctx.map((ctx_i) ->
+                ctx_i.transform(mixMtx[0], mixMtx[1], mixMtx[2], mixMtx[3], mixMtx[4], mixMtx[5])
             )
             ["transform", mixMtx]
 

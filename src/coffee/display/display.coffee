@@ -176,6 +176,7 @@ define([
             w = @w
             color = ctx.getImageData(pt[0], pt[1], 1, 1).data
             #has alpha
+            #這個，可能也要改成%4==3
             if (color[3])
                 # at + delta = center ---> delta = center - at
                 # ? + delta = pt

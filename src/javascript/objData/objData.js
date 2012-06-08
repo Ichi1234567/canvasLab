@@ -152,29 +152,26 @@
         return result;
       },
       "isIn": function(params) {
-        var cache, cacheCtx, color, color_i, fna, hasColor, i, localMAX, localMIN, localPt, pt, result, _len, _step;
-        console.log("------------------");
+        var cache, cacheCtx, color, color_i, ctx, fna, hasColor, i, localPt, pt, result, _len, _step;
         result = false;
         cache = this.cache;
         pt = params.pt;
-        params.pt = [pt[0] - cache.new_min[0], pt[1] - cache.new_min[0]];
-        localPt = this.pt2local(params);
-        localMIN = this.pt2local({
-          pt: cache.new_min
-        });
-        localMAX = this.pt2local({
-          pt: cache.new_max
-        });
         localPt = [pt[0] - cache.new_min[0], pt[1] - cache.new_min[1]];
         cacheCtx = cache.ctx[0];
         color = cacheCtx.getImageData(localPt[0], localPt[1], 1, 1).data;
-        console.log("cache-min：" + cache.new_min.join());
-        console.log("local-min：" + localMIN.join());
-        console.log("cache-xy：" + cache.x + "," + cache.y);
-        console.log("cache-max：" + cache.new_max.join());
-        console.log("local-max：" + localMAX.join());
-        console.log("pt：" + pt.join());
-        console.log("localPt：" + localPt.join());
+        ctx = cache.ctx[0];
+        ctx.beginPath();
+        ctx.arc(cache.new_min[0], cache.new_min[1], cache.w / 4, 0, 2 * Math.PI, false);
+        ctx.closePath();
+        ctx.fillStyle = "rgba(255, 0, 0, 1)";
+        ctx.fill();
+        ctx.fillStyle = "rgba(0, 0, 0, 1)";
+        ctx.beginPath();
+        ctx.arc(pt[0], pt[1], cache.w / 4, 0, 2 * Math.PI, false);
+        ctx.closePath();
+        ctx.fillStyle = "rgba(0, 255, 0, 1)";
+        ctx.fill();
+        ctx.fillStyle = "rgba(0, 0, 0, 1)";
         result = {
           inside: false
         };
@@ -226,9 +223,8 @@
         return localPt;
       },
       "pt2globle": function(params) {
-        var cb, globlePt, globlePtMtx, mtx, mtxArr, pt, pta;
+        var globlePt, globlePtMtx, mtx, mtxArr, pt, pta;
         params = params ? params : {};
-        cb = params.cb ? params.cb : (function() {});
         globlePt = false;
         pt = params.pt;
         mtx = this.data["mtxScript"][0][1];
@@ -242,7 +238,6 @@
         pta = [[pt[0]], [pt[1]], [1]];
         globlePtMtx = MTX.multiMtx(mtxArr, pta);
         globlePt = [globlePtMtx[0][0], globlePtMtx[1][0]];
-        cb(globlePt);
         return globlePt;
       }
     });

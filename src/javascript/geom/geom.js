@@ -27,9 +27,6 @@
         ctx = display.ctx;
         center = params.center;
         if (scale && scale.length === 2) {
-          ctx.map(function(ctx_i) {
-            return ctx_i.transform(scale[0], 0, 0, scale[1], 0, 0);
-          });
           mtx_val = [scale[0], 0, 0, scale[1], 0, 0];
           return cb(mtx_val);
         }
@@ -41,9 +38,6 @@
         ctx = display.ctx;
         center = params.center;
         if (vec && vec.length === 2) {
-          ctx.map(function(ctx_i) {
-            return ctx_i.transform(1, 0, 0, 1, vec[0], vec[1]);
-          });
           mtx_val = [1, 0, 0, 1, vec[0], vec[1]];
           return cb(mtx_val);
         }
@@ -55,9 +49,6 @@
         ctx = display.ctx;
         center = params.center;
         if (tfMtx && tfMtx.length === 6) {
-          ctx.map(function(ctx_i) {
-            return ctx_i.transform(tfMtx[0], tfMtx[1], tfMtx[2], tfMtx[3], tfMtx[4], tfMtx[5]);
-          });
           mtx_val = [tfMtx[0], tfMtx[1], tfMtx[2], tfMtx[3], tfMtx[4], tfMtx[5]];
           return cb(mtx_val);
         }
@@ -71,15 +62,12 @@
         if (typeof angle === "number") {
           center_new = [center[0] * Math.cos(angle) + center[1] * Math.sin(angle), -center[0] * Math.sin(angle) + center[1] * Math.cos(angle)];
           vec = [center[0] - center_new[0], center[1] - center_new[1]];
-          ctx.map(function(ctx_i) {
-            return ctx_i.transform(Math.cos(angle), -Math.sin(angle), Math.sin(angle), Math.cos(angle), 0, 0);
-          });
           mtx_val = [Math.cos(angle), -Math.sin(angle), Math.sin(angle), Math.cos(angle), 0, 0];
           return cb(mtx_val);
         }
       },
       unwrapMtx: function(mtxInfos, params) {
-        var mixMtx;
+        var ctx, display, mixMtx;
         mixMtx = [1, 0, 0, 1, 0, 0];
         mtxInfos.forEach(function(val) {
           var argi, cb, i, key, mtx, mtxArgs, newMtx;
@@ -106,6 +94,11 @@
             params.cb = cb;
             return GEOM[key](mtx, params);
           }
+        });
+        display = params.display;
+        ctx = display.ctx;
+        ctx.map(function(ctx_i) {
+          return ctx_i.transform(mixMtx[0], mixMtx[1], mixMtx[2], mixMtx[3], mixMtx[4], mixMtx[5]);
         });
         return ["transform", mixMtx];
       }

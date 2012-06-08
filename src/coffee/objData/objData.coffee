@@ -137,42 +137,42 @@ define([
             result = false
             result
         "isIn": (params) ->
-            console.log("------------------")
+            #console.log("------------------")
             #console.log("isIn~?")
             result = false
             cache = @cache
             pt = params.pt
-            #console.log(localPt2.join())
-            params.pt = [
-                pt[0] - cache.new_min[0],
-                pt[1] - cache.new_min[0]
-            ]
-            #params.nodelta = true
-            localPt = @pt2local(params)
-            #console.log("ori-localPt：" + localPt.join())
-            localMIN = @pt2local({pt: cache.new_min})
-            localMAX = @pt2local({pt: cache.new_max})
-            #localPt = params.pt
             localPt = [
-                #localPt[0] - cache.x,
-                #localPt[1] - cache.y
-                #localPt[0] - localMIN[0],
-                #localPt[1] - localMIN[1]
-                #localPt[0] - cache.new_min[0],
-                #localPt[1] - cache.new_min[1]
                 pt[0] - cache.new_min[0],
                 pt[1] - cache.new_min[1]
             ]
             cacheCtx = cache.ctx[0]
             color = cacheCtx.getImageData(localPt[0], localPt[1], 1, 1).data
+            ctx = cache.ctx[0]
 
-            console.log("cache-min：" + cache.new_min.join())
-            console.log("local-min：" + localMIN.join())
-            console.log("cache-xy：" + cache.x + "," + cache.y)
-            console.log("cache-max：" + cache.new_max.join())
-            console.log("local-max：" + localMAX.join())
-            console.log("pt：" + pt.join())
-            console.log("localPt：" + localPt.join())
+            ctx.beginPath()
+            ctx.arc(cache.new_min[0], cache.new_min[1], (cache.w / 4), 0, 2 * Math.PI, false)
+            ctx.closePath()
+            ctx.fillStyle = "rgba(255, 0, 0, 1)"
+            ctx.fill()
+            ctx.fillStyle = "rgba(0, 0, 0, 1)"
+
+            ctx.beginPath()
+            ctx.arc(pt[0], pt[1], (cache.w / 4), 0, 2 * Math.PI, false)
+            ctx.closePath()
+            ctx.fillStyle = "rgba(0, 255, 0, 1)"
+            ctx.fill()
+            ctx.fillStyle = "rgba(0, 0, 0, 1)"
+
+            #localMIN = @pt2local({pt: cache.new_min})
+            #localMAX = @pt2local({pt: cache.new_max})
+            #console.log("cache-min：" + cache.new_min.join())
+            #console.log("local-min：" + localMIN.join())
+            #console.log("cache-xy：" + cache.x + "," + cache.y)
+            #console.log("cache-max：" + cache.new_max.join())
+            #console.log("local-max：" + localMAX.join())
+            #console.log("pt：" + pt.join())
+            #console.log("localPt：" + localPt.join())
             #console.log("color：")
             #console.log(color)
             #result
@@ -203,9 +203,8 @@ define([
                     if (@evStatus != "mousedown")
                         result.fna = []
                     @evStatus = null
-                #when ("mouseup")
-                #    @evStatus = null
             #console.log(result)
+            #console.log("-------------------------")
             result
 
         "pt2local": (params) ->
@@ -252,7 +251,7 @@ define([
 
         "pt2globle": (params) ->
             params = if (params) then (params) else ({})
-            cb = if (params.cb) then (params.cb) else (() ->)
+            #cb = if (params.cb) then (params.cb) else (() ->)
 
             globlePt = false
 
@@ -272,7 +271,7 @@ define([
                 globlePtMtx[1][0]
             ]
 
-            cb(globlePt)
+            #cb(globlePt)
 
             globlePt
     )
