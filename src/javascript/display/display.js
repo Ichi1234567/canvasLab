@@ -163,13 +163,22 @@
       };
 
       DISPLAY.prototype["_handleEvts"] = function(params) {
-        var color, ctx, fna_i, h, i, lookat, newpt, pt, result, w, _len, _ref;
+        var color, color_i, ctx, fna_i, h, hasColor, i, lookat, newpt, pt, result, w, _len, _len2, _ref, _step;
         pt = params.pt;
         ctx = this.ctx[this.current];
         h = this.h;
         w = this.w;
         color = ctx.getImageData(pt[0], pt[1], 1, 1).data;
-        if (color[3]) {
+        hasColor = false;
+        for (i = 0, _len = color.length, _step = 3; i < _len; i += _step) {
+          color_i = color[i];
+          if (color_i) {
+            hasColor = true;
+            i = color.length;
+          }
+          i && (i++);
+        }
+        if (hasColor) {
           lookat = this.lookat;
           newpt = [pt[0] - (w / 2) + lookat[0], pt[1] - (h / 2) + lookat[1]];
           params.pt = newpt;
@@ -177,7 +186,7 @@
           if (result.inside) {
             if (!!result.fna && result.fna.length) {
               _ref = result.fna;
-              for (i = 0, _len = _ref.length; i < _len; i++) {
+              for (i = 0, _len2 = _ref.length; i < _len2; i++) {
                 fna_i = _ref[i];
                 fna_i(params.e, result.target);
               }
@@ -208,6 +217,12 @@
         obj = params.obj ? params.obj : null;
         tmpPt = params.pt ? params.pt : null;
         return result;
+      };
+
+      DISPLAY.prototype["getImgData"] = function(ctx, x, y, w, h) {
+        var data;
+        data = ctx.getImageData(x, y, w, h);
+        return data;
       };
 
       return DISPLAY;

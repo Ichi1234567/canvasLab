@@ -118,14 +118,27 @@
         params.w = size[0];
         params.h = size[1];
         params.mtx = this.data["mtxScript"];
-        this.cache = new CACHE(params);
+        this._cache = new CACHE(params);
         return this;
       },
       "updateCache": function(params) {
+        var ctx, data, display, display_at, display_h, display_w, globalMin, _max, _min, _params, _size;
         params = params ? params : {};
         params.mtx = this.data["mtxScript"];
         params.objs = [this];
-        this.cache.updateCanvas(params);
+        display = params.display;
+        ctx = params.ctx;
+        _min = params.min;
+        _max = params.max;
+        _size = params.size;
+        display_w = display.w;
+        display_h = display.h;
+        display_at = display.lookat;
+        globalMin = [display_w / 2 - display_at[0] + _min[0], display_h / 2 - display_at[1] + _min[1]];
+        data = display.getImgData(ctx, globalMin[0], globalMin[1], _size[0], _size[1]);
+        _params = $.extend({}, params);
+        _params.data = data;
+        this._cache.updateCanvas(_params);
         return this;
       },
       "bindEvt": function(evtype, fn) {
@@ -152,26 +165,19 @@
         return result;
       },
       "isIn": function(params) {
-        var cache, cacheCtx, color, color_i, ctx, fna, hasColor, i, localPt, pt, result, _len, _step;
+        var cache, cacheCtx, color, color_i, fna, hasColor, i, localPt, pt, result, _len, _step;
         result = false;
-        cache = this.cache;
+        cache = this._cache;
         pt = params.pt;
         localPt = [pt[0] - cache.new_min[0], pt[1] - cache.new_min[1]];
         cacheCtx = cache.ctx[0];
         color = cacheCtx.getImageData(localPt[0], localPt[1], 1, 1).data;
-        ctx = cache.ctx[0];
-        ctx.beginPath();
-        ctx.arc(cache.new_min[0], cache.new_min[1], cache.w / 4, 0, 2 * Math.PI, false);
-        ctx.closePath();
-        ctx.fillStyle = "rgba(255, 0, 0, 1)";
-        ctx.fill();
-        ctx.fillStyle = "rgba(0, 0, 0, 1)";
-        ctx.beginPath();
-        ctx.arc(pt[0], pt[1], cache.w / 4, 0, 2 * Math.PI, false);
-        ctx.closePath();
-        ctx.fillStyle = "rgba(0, 255, 0, 1)";
-        ctx.fill();
-        ctx.fillStyle = "rgba(0, 0, 0, 1)";
+        cacheCtx.beginPath();
+        cacheCtx.arc(localPt[0], localPt[1], cache.w / 4, 0, 2 * Math.PI, false);
+        cacheCtx.closePath();
+        cacheCtx.fillStyle = "rgba(0, 255, 0, 1)";
+        cacheCtx.fill();
+        cacheCtx.fillStyle = "rgba(0, 0, 0, 1)";
         result = {
           inside: false
         };
@@ -217,7 +223,7 @@
         invMtx = MTX.invert(mtxArr);
         pta = [[pt[0]], [pt[1]], [1]];
         localPtMtx = MTX.multiMtx(invMtx, pta);
-        cache = this.cache;
+        cache = this._cache;
         cacheCtx = cache.ctx[0];
         localPt = [localPtMtx[0][0], localPtMtx[1][0]];
         return localPt;

@@ -111,14 +111,36 @@ define([
             params.w = size[0]
             params.h = size[1]
             params.mtx = @data["mtxScript"]
-            @cache = new CACHE(params)
+            @_cache = new CACHE(params)
             @
         "updateCache": (params) ->
             #console.log("updateCache")
             params = if (params) then (params) else ({})
             params.mtx = @data["mtxScript"]
             params.objs = [@]
-            @cache.updateCanvas(params)
+            #@_cache.updateCanvas(params)
+
+            display = params.display
+            ctx = params.ctx
+            _min = params.min
+            _max = params.max
+            _size = params.size
+            display_w = display.w
+            display_h = display.h
+            display_at = display.lookat
+            globalMin = [
+                (display_w / 2 - display_at[0] + _min[0]),
+                (display_h / 2 - display_at[1] + _min[1])
+            ]
+            data = display.getImgData(ctx, globalMin[0], globalMin[1], _size[0], _size[1])
+            #console.log(data)
+            _params = $.extend({}, params)
+            _params.data = data
+            @_cache.updateCanvas(_params)
+            #console.log("gmin：" + globalMin.join())
+            #console.log("min：" + _min.join())
+            #console.log("max：" + _max.join())
+            #console.log("size：" + _size.join())
             @
 
         "bindEvt": (evtype, fn) ->
@@ -139,30 +161,38 @@ define([
         "isIn": (params) ->
             #console.log("------------------")
             #console.log("isIn~?")
+            #console.log(params)
             result = false
-            cache = @cache
+            cache = @_cache
             pt = params.pt
             localPt = [
                 pt[0] - cache.new_min[0],
                 pt[1] - cache.new_min[1]
             ]
+            #localPt = pt
             cacheCtx = cache.ctx[0]
             color = cacheCtx.getImageData(localPt[0], localPt[1], 1, 1).data
-            ctx = cache.ctx[0]
 
-            ctx.beginPath()
-            ctx.arc(cache.new_min[0], cache.new_min[1], (cache.w / 4), 0, 2 * Math.PI, false)
-            ctx.closePath()
-            ctx.fillStyle = "rgba(255, 0, 0, 1)"
-            ctx.fill()
-            ctx.fillStyle = "rgba(0, 0, 0, 1)"
+            #cacheCtx.beginPath()
+            #cacheCtx.arc(cache.new_min[0], cache.new_min[1], (cache.w / 4), 0, 2 * Math.PI, false)
+            #cacheCtx.closePath()
+            #cacheCtx.fillStyle = "rgba(255, 0, 0, 1)"
+            #cacheCtx.fill()
+            #cacheCtx.fillStyle = "rgba(0, 0, 0, 1)"
 
-            ctx.beginPath()
-            ctx.arc(pt[0], pt[1], (cache.w / 4), 0, 2 * Math.PI, false)
-            ctx.closePath()
-            ctx.fillStyle = "rgba(0, 255, 0, 1)"
-            ctx.fill()
-            ctx.fillStyle = "rgba(0, 0, 0, 1)"
+            #cacheCtx.beginPath()
+            #cacheCtx.arc(pt[0], pt[1], (cache.w / 4), 0, 2 * Math.PI, false)
+            #cacheCtx.closePath()
+            #cacheCtx.fillStyle = "rgba(0, 255, 0, 1)"
+            #cacheCtx.fill()
+            #cacheCtx.fillStyle = "rgba(0, 0, 0, 1)"
+
+            cacheCtx.beginPath()
+            cacheCtx.arc(localPt[0], localPt[1], (cache.w / 4), 0, 2 * Math.PI, false)
+            cacheCtx.closePath()
+            cacheCtx.fillStyle = "rgba(0, 255, 0, 1)"
+            cacheCtx.fill()
+            cacheCtx.fillStyle = "rgba(0, 0, 0, 1)"
 
             #localMIN = @pt2local({pt: cache.new_min})
             #localMAX = @pt2local({pt: cache.new_max})
@@ -237,7 +267,7 @@ define([
             #console.log(mtxArr)
             #console.log(MTX)
             #console.log(localPtMtx)
-            cache = @cache
+            cache = @_cache
             #console.log(cache)
             cacheCtx = cache.ctx[0]
             localPt = [

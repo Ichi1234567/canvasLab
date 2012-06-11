@@ -177,7 +177,14 @@ define([
             color = ctx.getImageData(pt[0], pt[1], 1, 1).data
             #has alpha
             #這個，可能也要改成%4==3
-            if (color[3])
+            hasColor = false
+            for color_i, i in color by 3
+                if (color_i)
+                    hasColor = true
+                    i = color.length
+                (i && (i++))
+
+            if (hasColor)
                 # at + delta = center ---> delta = center - at
                 # ? + delta = pt
                 # ? = pt - delta = pt - (center - at)
@@ -215,6 +222,11 @@ define([
             #if (obj && tmpPt)
             #   console.log(123) 
             result
+
+        "getImgData": (ctx, x, y, w, h) ->
+            data = ctx.getImageData(x, y, w, h)
+            data
+            
 
     DISPLAY
 )
