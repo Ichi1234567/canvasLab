@@ -1,5 +1,8 @@
 define([
-], () ->
+    #"../evts/evts",
+    "../display/cache"
+    "../geom/mtx"
+], (CACHE, MTX) ->
     console.log("---objData---")
 
     parse = (txt) ->
@@ -83,6 +86,15 @@ define([
                 @data = parse(params[0])
                 @data["mtxScript"] = []
                 @data["mode"] = "GENERAL"
+                @parent = if (params.parent) then (params.parent) else (null)
+                @children = if (params.children) then (params.children) else ([])
+                @evts = {
+                    "mousedown": []
+                    "mouseup": []
+                    "click": []
+                    "dblclick": []
+                }
+                @evStatus = null
             @
         "reset": (params) ->
             @data["mtxScript"] = []
@@ -90,9 +102,210 @@ define([
         "pushMtx": (key, mtx, params) ->
             @data["mtxScript"].push([key, mtx, params])
             @
-        "mergeMtx": () ->
+        "cache": (params) ->
+            params = if (params) then (params) else ({})
+            min = @data.min
+            size = @data.size
+            params.x = min[0]
+            params.y = min[1]
+            params.w = size[0]
+            params.h = size[1]
+            params.mtx = @data["mtxScript"]
+            @_cache = new CACHE(params)
             @
+        "updateCache": (params) ->
+            #console.log("updateCache")
+            params = if (params) then (params) else ({})
+            params.mtx = @data["mtxScript"]
+            params.objs = [@]
+            #@_cache.updateCanvas(params)
+
+            display = params.display
+            ctx = params.ctx
+            _min = params.min
+            _max = params.max
+            _size = params.size
+            display_w = display.w
+            display_h = display.h
+            display_at = display.lookat
+            globalMin = [
+                (display_w / 2 - display_at[0] + _min[0]),
+                (display_h / 2 - display_at[1] + _min[1])
+            ]
+            data = display.getImgData(ctx, globalMin[0], globalMin[1], _size[0], _size[1])
+            #console.log(data)
+            _params = $.extend({}, params)
+            _params.data = data
+            @_cache.updateCanvas(_params)
+            #console.log("gmin：" + globalMin.join())
+            #console.log("min：" + _min.join())
+            #console.log("max：" + _max.join())
+            #console.log("size：" + _size.join())
+            @
+
+        "bindEvt": (evtype, fn) ->
+            if (typeof @evts[evtype] != "undefined")
+                @evts[evtype].push(fn)
+            @
+        "cancelEvt": (evtype, fn) ->
+            if (typeof @evts[evtype] != "undefined")
+                for fn_i, i in @evts[evtype]
+                    if (fn_i == fn)
+                        delete @evts[evtype][i]
+                        i = @evts[evtype].length
+            @
+
+        "_hitTest": () ->
+            result = false
+            result
+        "isIn": (params) ->
+            #console.log("------------------")
+            #console.log("isIn~?")
+            #console.log(params)
+            result = false
+            cache = @_cache
+            pt = params.pt
+            localPt = [
+                pt[0] - cache.new_min[0],
+                pt[1] - cache.new_min[1]
+            ]
+            #localPt = pt
+            cacheCtx = cache.ctx[0]
+            color = cacheCtx.getImageData(localPt[0], localPt[1], 1, 1).data
+
+            #cacheCtx.beginPath()
+            #cacheCtx.arc(cache.new_min[0], cache.new_min[1], (cache.w / 4), 0, 2 * Math.PI, false)
+            #cacheCtx.closePath()
+            #cacheCtx.fillStyle = "rgba(255, 0, 0, 1)"
+            #cacheCtx.fill()
+            #cacheCtx.fillStyle = "rgba(0, 0, 0, 1)"
+
+            #cacheCtx.beginPath()
+            #cacheCtx.arc(pt[0], pt[1], (cache.w / 4), 0, 2 * Math.PI, false)
+            #cacheCtx.closePath()
+            #cacheCtx.fillStyle = "rgba(0, 255, 0, 1)"
+            #cacheCtx.fill()
+            #cacheCtx.fillStyle = "rgba(0, 0, 0, 1)"
+
+            cacheCtx.beginPath()
+            cacheCtx.arc(localPt[0], localPt[1], (cache.w / 4), 0, 2 * Math.PI, false)
+            cacheCtx.closePath()
+            cacheCtx.fillStyle = "rgba(0, 255, 0, 1)"
+            cacheCtx.fill()
+            cacheCtx.fillStyle = "rgba(0, 0, 0, 1)"
+
+            #localMIN = @pt2local({pt: cache.new_min})
+            #localMAX = @pt2local({pt: cache.new_max})
+            #console.log("cache-min：" + cache.new_min.join())
+            #console.log("local-min：" + localMIN.join())
+            #console.log("cache-xy：" + cache.x + "," + cache.y)
+            #console.log("cache-max：" + cache.new_max.join())
+            #console.log("local-max：" + localMAX.join())
+            #console.log("pt：" + pt.join())
+            #console.log("localPt：" + localPt.join())
+            #console.log("color：")
+            #console.log(color)
+            #result
+            result = {
+                inside: false
+            }
+            hasColor = false
+            for color_i, i in color by 3
+                if (color_i)
+                    hasColor = true
+                    i = color.length
+                (i && (i++))
+            #console.log("hasColor：" + hasColor)
+            if (hasColor)
+                #console.log("-------------------------")
+                #console.log(params.e.type)
+                #console.log(@evts["click"])
+                #console.log(@evts[params.e.type])
+                fna = $.extend([], @evts[params.e.type])
+                result = {
+                    inside: true
+                    fna: fna
+                }
+                @evStatus = if (params.e.type == "mousedown") then ("mousedown") else (@evStatus)
+            switch (params.e.type)
+                when ("click"), ("dblclick")
+                    #console.log(@evStatus)
+                    if (@evStatus != "mousedown")
+                        result.fna = []
+                    @evStatus = null
+            #console.log(result)
+            #console.log("-------------------------")
+            result
+
+        "pt2local": (params) ->
+            params = if (params) then (params) else ({})
+
+            localPt = false
+            pt = params.pt
+            #console.log("-------------------")
+            #console.log("pt2local")
+            #console.log("pt：")
+            #console.log(pt.join())
+            mtx = @data["mtxScript"][0][1]
+            mtxArr = MTX.loadIdentity()
+            mtxArr[0][0] = mtx[0]
+            mtxArr[1][0] = mtx[1]
+            mtxArr[0][1] = mtx[2]
+            mtxArr[1][1] = mtx[3]
+            mtxArr[0][2] = if (params.nodelta) then (0) else (mtx[4])
+            mtxArr[1][2] = if (params.nodelta) then (0) else (mtx[5])
+            pta = [[pt[0]], [pt[1]], [1]]
+            #localPtMtx = MTX.multiMtx(mtxArr, pta)
+            invMtx = MTX.invert(mtxArr)
+            #console.log("--- invMtx ---")
+            #console.log(invMtx)
+            pta = [[pt[0]], [pt[1]], [1]]
+            #console.log("pta")
+            #console.log(pta)
+            localPtMtx = MTX.multiMtx(invMtx, pta)
+            #console.log(mtx)
+            #console.log(mtxArr)
+            #console.log(MTX)
+            #console.log(localPtMtx)
+            cache = @_cache
+            #console.log(cache)
+            cacheCtx = cache.ctx[0]
+            localPt = [
+                localPtMtx[0][0],
+                localPtMtx[1][0]
+            ]
+            #console.log(localPt.join())
+            #console.log("--------------------------------")
+
+            localPt
+
+        "pt2globle": (params) ->
+            params = if (params) then (params) else ({})
+            #cb = if (params.cb) then (params.cb) else (() ->)
+
+            globlePt = false
+
+            pt = params.pt
+            mtx = @data["mtxScript"][0][1]
+            mtxArr = MTX.loadIdentity()
+            mtxArr[0][0] = mtx[0]
+            mtxArr[1][0] = mtx[1]
+            mtxArr[0][1] = mtx[2]
+            mtxArr[1][1] = mtx[3]
+            mtxArr[0][2] = mtx[4]
+            mtxArr[1][2] = mtx[5]
+            pta = [[pt[0]], [pt[1]], [1]]
+            globlePtMtx = MTX.multiMtx(mtxArr, pta)
+            globlePt = [
+                globlePtMtx[0][0],
+                globlePtMtx[1][0]
+            ]
+
+            #cb(globlePt)
+
+            globlePt
     )
+    
 
     OBJDATA
 )

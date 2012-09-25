@@ -1,0 +1,43 @@
+{{#IN}}
+<div>
+    {{#row}}
+        {{#col}}<input type="text" size=7 value={{val}} />{{/col}}<br>
+    {{/row}}
+    {{#num}}
+        <input type="text" size=7 value={{val}} />
+    {{/num}}
+<div>
+{{/IN}}
+
+
+
+{{#OUT}}
+    {{#mtx1}}
+    <div style="display: inline-block; border: solid 1px black; padding: 15px; margin:5px;">
+        {{#row}}<pre style="display:inline-block;">{{val}}</pre><br>{{/row}}
+    </div>
+    {{/mtx1}}
+    
+    <span style="padding:15px; margin:5px;">{{op}}</span>
+    
+    {{#mtx2}}
+    <div style="display: inline-block; border: solid 1px black; padding: 15px; margin:5px;">
+        {{#row}}<pre style="display:inline-block;">{{val}}</pre><br>{{/row}}
+        {{#num}}<span style="padding:15px; margin:5px;">{{val}}</span>{{/num}}
+    </div>
+    {{/mtx2}}
+
+    {{#num}}
+    <span style="padding:15px; margin:5px">{{val}}</span>
+    {{/num}}
+    
+    <span style="padding:15px; margin:5px"> = </span>
+    
+    {{#result}}
+    <div style="display: inline-block; border: solid 1px black; padding:15px; margin:5px;">
+        {{#row}}<pre style="display:inline-block;">{{val}}</pre><br>{{/row}}
+        {{#num}}<span style="padding:15px; margin:5px;">{{val}}</span>{{/num}}
+    </div>
+    {{/result}}
+{{/OUT}}
+

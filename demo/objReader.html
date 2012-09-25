@@ -12,29 +12,32 @@
   <body>
     <section style="float: left; padding-right: 2em;">
         <div>
-            <input type="file" id="mymodel"/>
-            <div>shape file：<br>
+            <!--input type="file" id="mymodel"/-->
+            <div>
+                <h3>shape file：</h3>
                 <input type="radio" name="shape" val="../pics/circle.obj"/>circle
                 <input type="radio" name="shape" val="../pics/square.obj"/>square
                 <input type="radio" name="shape" val="../pics/triangle.obj"/>triangle
                 <input type="radio" name="shape" val="../pics/basicBuilding.obj"/>building
             </div>
-            <div>mode：<br>
+            <div>
+                <h4>mode：</h4>
                 <input type="radio" checked name="mode" val="GERERAL"/>GERERAL
                 <input type="radio" name="mode" val="SKELETON"/>SKELETON
                 <input type="radio" name="mode" val="ONLYFACE"/>ONLYFACE
             </div>
         </div>
         <hr>
-        <div>
-            <h3>OBJ DATA - <span id="name"></span></h3>
+        <div id="obj-inf">
+            <h3>not loading yet ...</h3>
+            <!--h3>OBJ DATA - <span id="name"></span></h3>
             <p>v_num：<span id="vnum"></span></p>
             <p>f_num：<span id="fnum"></span></p>
             <p>_cp：( <span id="cp"></span> )</p>
             <p>(w, h)：( <span id="size"></span> )</p>
             <p>r：<span id="r"></span></p>
             v：<p id="v"></p>
-            f：<p id="f"></p>
+            f：<p id="f"></p-->
         </div>
     </section>
     <section>
@@ -55,14 +58,27 @@
                 <button id="clearMtx">clear above matrix</button>
                 <button id="pushMtx">push above matrix</button>
             </div>
+            <div style="clear: both;"></div>
+            <hr>
+            <div>
+                <input type="checkbox" name="evts" val="mousedown"/>mousedown
+                <input type="checkbox" name="evts" val="mouseup"/>mouseup
+                <input type="checkbox" name="evts" val="click"/>click
+                <input type="checkbox" name="evts" val="dblclick"/>dblclick
+                <br>
+                <button id="reset-ev-log">reset log</button><br>
+                <div style="border: 1px solid black;" id="evlog">
+                </div>
+            </div>
+            <div id="cache"></div>
         </div>
         <div>
             <h3><span id="ctx-title"></span> in Canvas</h3>
             <div id="render"></div>
         </div>
     </section>
-    <script type="text/javascript" src="http://busterjs.org/releases/latest/buster-test.js"></script>
-    <script type="text/javascript" src="http://busterjs.org/examples/strftime/strftime.js"></script>
+    <!--script type="text/javascript" src="http://busterjs.org/releases/latest/buster-test.js"></script>
+    <script type="text/javascript" src="http://busterjs.org/examples/strftime/strftime.js"></script-->
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
     <script type="text/javascript" src="http://documentcloud.github.com/underscore/underscore-min.js"></script>
     <script type="text/javascript" src="http://documentcloud.github.com/backbone/backbone-min.js"></script>
@@ -73,7 +89,7 @@
         "baseUrl":'../src/javascript'
     }
     </script>
-    <script data-main="main-reader" src="http://requirejs.org/docs/release/1.0.7/minified/require.js"></script>
+    <script data-main="main-reader2" src="http://requirejs.org/docs/release/1.0.7/minified/require.js"></script>
   </body>
 </html>
 
